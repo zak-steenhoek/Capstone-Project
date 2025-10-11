@@ -1,4 +1,4 @@
-%% Aricraft Nuetral Points`
+%% Aricraft Nuetral Points
 clc; clear; close all;
 
 % UAS 1
