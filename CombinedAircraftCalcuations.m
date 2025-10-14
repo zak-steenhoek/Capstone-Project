@@ -31,9 +31,22 @@ Sweep_Angle = 30 * (pi/180);
 Tail1_Y = Tail1_Y - TailSeperationDist - NoseSetbackDist;
 Tail1_AC(2) = Tail1_AC(2) - TailSeperationDist - NoseSetbackDist;
 
-% NP1 = -(( Wing1_S * Wing1_AC(2) ) + ( Tail1_S * Tail1_AC(2) )) / ( Wing1_S * Wing1_AC(2) )
-%NP1 = (Tail1_AC(2) - Wing1_AC(2)) / (1 + (Wing1_S / Tail1_S));
-%NP1 = NP1 + Wing1_AC(2);
+% % ciurpita.tripod.com/rc/notes/nuetralPt.html
+% h0 = 0.25*(Wing1_MACloc(1) - Wing1_MACloc(2)); % Aerodynamic center of wing
+% ht = 0.6; % stabilizer efficiency
+% Vt = Tail1_S*TailSeperationDist / (Wing1_S*-abs(Wing1_MACloc(1) - Wing1_MACloc(2))); % tail volume
+at = 2*pi; % lift curve slope tail
+aw = 2*pi; % lift curve slope wing
+% NP1 = -h0 + ht*Vt*(at/aw)
+% %NP1 = (Tail1_AC(2) - Wing1_AC(2)) / (1 + (Wing1_S / Tail1_S));
+% NP1 = NP1 - NoseSetbackDist;
+
+% Spacecraft Design ASU
+CMAC = abs(Wing1_MACloc(1) - Wing1_MACloc(2));
+lt = abs(Wing1_AC(2) - Tail1_AC(2));
+Vt = (lt*Tail1_S) / (Wing1_S*CMAC);
+NP1 = Wing1_AC(2) - CMAC*0.6*Vt*(at/aw);
+
 
 % UAS 2
 NoseSetbackDist = 0.100;
@@ -69,6 +82,16 @@ Tail2_AC(2) = Tail2_AC(2) - TailSeperationDist - NoseSetbackDist;
 %NP2 = (Tail2_AC(2) - Wing2_AC(2)) / (1 + (Wing2_S / Tail2_S));
 %NP2 = NP2 + Wing2_AC(2);
 
+at = 2*pi; % lift curve slope tail
+aw = 2*pi; % lift curve slope wing
+% Spacecraft Design ASU
+CMAC = abs(Wing2_MACloc(1) - Wing2_MACloc(2));
+lt = abs(Wing2_AC(2) - Tail2_AC(2));
+Vt = (lt*Tail2_S) / (Wing2_S*CMAC);
+NP2 = Wing2_AC(2) - CMAC*0.6*Vt*(at/aw);
+
+
+
 
 % UAS 1
 figure()
@@ -84,7 +107,7 @@ scatter([0 0],[Wing1_AC(2) Tail1_AC(2)],20,'bo',"filled");
 plot([Wing1_AC(1) Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
 plot([-Wing1_AC(1) -Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
 plot([Wing1_AC(1) -Wing1_AC(1)], [Wing1_AC(2) Wing1_AC(2)],'k:')
-%scatter(0,NP1,'kdiamond',"filled");
+scatter(0,NP1,'kdiamond',"filled");
 patch(UAS1Fuselage, -UAS1x, 'b', 'FaceAlpha', 0.05, 'EdgeColor', 'b');
 grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.1]);
 title("UAS 1 : ISR")
@@ -99,7 +122,7 @@ scatter([0 0],[Wing2_AC(2) Tail2_AC(2)],20,'ro',"filled");
 plot([Wing2_AC(1) Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
 plot([-Wing2_AC(1) -Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
 plot([Wing2_AC(1) -Wing2_AC(1)], [Wing2_AC(2) Wing2_AC(2)],'k:')
-%scatter(0,NP2,'kdiamond',"filled");
+scatter(0,NP2,'kdiamond',"filled");
 patch(UAS2Fuselage,-UAS2x, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'r');
 grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.1]);
 title("UAS 2 : Payload Drop")
@@ -122,8 +145,8 @@ plot([-Wing1_AC(1) -Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
 plot([-Wing2_AC(1) -Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
 plot([Wing1_AC(1) -Wing1_AC(1)], [Wing1_AC(2) Wing1_AC(2)],'k:')
 plot([Wing2_AC(1) -Wing2_AC(1)], [Wing2_AC(2) Wing2_AC(2)],'k:')
-%scatter(0,NP1,'kdiamond',"filled");
-%scatter(0,NP2,'kdiamond',"filled");
+scatter(0,NP1,'kdiamond',"filled");
+scatter(0,NP2,'kdiamond',"filled");
 
 patch(UAS1Fuselage, -UAS1x, 'b', 'FaceAlpha', 0.05, 'EdgeColor', 'b');
 patch(UAS2Fuselage,-UAS2x, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'r');
