@@ -31,7 +31,7 @@ alpha = linspace(-10, 10, 100).* pi/180;
 
 kw = 2*pi*(a0wing).^-1;
 
-aw = (2*pi*ARwing) * (2 + sqrt( (ARwing^2*(1-M^2)*(kw)^2)* (1 + (tan(Lambdawing)^2)/(1-M^2)) + 4)).^-1;
+aw = (2*pi*ARwing) * (2 + sqrt( (ARwing^2*(1-M^2)*(kw)^2)* (1 + (tan(Lambdawinghalf)^2)/(1-M^2)) + 4)).^-1;
 % ^should be lambda at half chord line on wing
 
 clw = aw * alpha;
