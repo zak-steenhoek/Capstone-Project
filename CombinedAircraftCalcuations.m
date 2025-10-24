@@ -90,7 +90,18 @@ lt = abs(Wing2_AC(2) - Tail2_AC(2));
 Vt = (lt*Tail2_S) / (Wing2_S*CMAC);
 NP2 = Wing2_AC(2) - CMAC*0.6*Vt*(at/aw);
 
+% Combined UAS NP
+% Determination of the Nuetral POint for a Box Wing Aircraft [eq 5]
 
+h01 = Wing1_AC(2);
+h02 = Wing2_AC(2);
+l2 = Wing1_Y(1) - Wing2_Y(1);
+c1 = abs(Wing1_MACloc(1) - Wing1_MACloc(2));
+c2 = abs(Wing2_MACloc(1) - Wing2_MACloc(2));
+CLa1 = 2*pi;
+CLa2 = 2*pi;
+de_da = 1;
+hn = h01 + (l2 + h02*c2 - h01*c1)*(1-de_da)*(CLa2/CLa1) / (1 + (1-de_da)*(CLa2/CLa1));
 
 
 % UAS 1
@@ -145,12 +156,13 @@ plot([-Wing1_AC(1) -Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
 plot([-Wing2_AC(1) -Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
 plot([Wing1_AC(1) -Wing1_AC(1)], [Wing1_AC(2) Wing1_AC(2)],'k:')
 plot([Wing2_AC(1) -Wing2_AC(1)], [Wing2_AC(2) Wing2_AC(2)],'k:')
-scatter(0,NP1,'kdiamond',"filled");
-scatter(0,NP2,'kdiamond',"filled");
+%scatter(0,NP1,'kdiamond',"filled");
+%scatter(0,NP2,'kdiamond',"filled");
+scatter(0,hn,'kdiamond',"filled");
 
 patch(UAS1Fuselage, -UAS1x, 'b', 'FaceAlpha', 0.05, 'EdgeColor', 'b');
 patch(UAS2Fuselage,-UAS2x, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'r');
 grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.1]);
 title("Combined UAS")
 
-UAS1_LongStab(Wing1_)
+%UAS1_LongStab(Wing1_)
