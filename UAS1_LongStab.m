@@ -1,5 +1,5 @@
 %% UAS 1     Aft-Swept + Tail
-clc; clear; close all
+function UAS1_LongStab()
 % Airfoil Wing Relations
 %  Using Values of wing and NACA 3412 Airfoil
 
@@ -92,15 +92,19 @@ etahtail = (Vhtail/ V);
 
 cmt = -etahtail * Vh_hat*clt + etahtail*(Stail/Swing)*(hw-hnw)*clt;
 
+% Moment of Whole body
 
-% Moment of whole body
+% Moment of Fuselage
+EV = 0.020106; % Effective Volume of Fuselage shape
+Cmf = 2*EV/(Swing*Cw)*alpha;
+
 % Wing body pitching moment. 
 cm0wf = cm0wing * ARwing*cos(Lambdawing)^2/(ARwing + 2*cos(Lambdawing)^2); 
 % cm0wing is wing airfoil pitching moment, and full lambda used here
 
-Cm1 = cm0wf + cmw + cmt; % Full moment coefficient to find longitudinal stability
-
+Cm1 = cm0wf + cmw + cmt + Cmf; % Full moment coefficient to find longitudinal stability
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
 plot(alpha.*180/pi,Cm1); title("C_m vs \alpha", "UAS 1"); 
 xlabel("angle of attack (^o)"); ylabel("Total Moment Coefficient");
 grid on;
+end
