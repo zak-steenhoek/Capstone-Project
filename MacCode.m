@@ -1,5 +1,5 @@
 % MAC Function
-function [X,Y,AC,S,Macloc] = MacCode(Root_Chord, Tip_Chord, Half_Span, Sweep_Angle)
+function [X,Y,AC,S,Macloc,quarterSweep,halfSweep] = MacCode(Root_Chord, Tip_Chord, Half_Span, Sweep_Angle)
     yloc_sweep = Half_Span*tan(Sweep_Angle);
 
     y1Root = Tip_Chord;
@@ -23,10 +23,18 @@ function [X,Y,AC,S,Macloc] = MacCode(Root_Chord, Tip_Chord, Half_Span, Sweep_Ang
     AC = [x_val leadingEdgeMAC - (leadingEdgeMAC-trailingEdgeMAC)*0.25];
     S = trapz([0 Half_Span Half_Span 0], [0 -yloc_sweep -yloc_sweep-Tip_Chord -Root_Chord]);
 
-%     figure()
-%     plot(X,Y); hold on;
-%     grid on; axis equal;
-%     plot([0 Half_Span],[y1Root y1Tip],'k--');
-%     plot([0 Half_Span],[y2Root y2Tip],'k--');
-%     scatter(x_val,y_val,'ko')
+
+    quarterSweepPos = [-Root_Chord*0.25 -yloc_sweep-(Tip_Chord*0.25)];
+    quarterSweep = atan(( quarterSweepPos(1) - quarterSweepPos(2) ) / Half_Span) * 180/pi;
+    halfsweepPos = [-Root_Chord*0.5 -yloc_sweep-(Tip_Chord*0.5)];
+    halfSweep = atan(( halfsweepPos(1) - halfsweepPos(2) ) / Half_Span) * 180/pi;
+
+    figure()
+    plot(X,Y); hold on;
+    grid on; axis equal;
+    plot([0 Half_Span],[y1Root y1Tip],'k--');
+    plot([0 Half_Span],[y2Root y2Tip],'k--');
+    plot([0 Half_Span],[quarterSweepPos(1) quarterSweepPos(2)],'r--');
+    plot([0 Half_Span],[halfsweepPos(1) halfsweepPos(2)],'b--');
+    scatter(x_val,y_val,'ko')
 end
