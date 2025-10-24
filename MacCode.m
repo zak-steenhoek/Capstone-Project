@@ -29,12 +29,12 @@ function [X,Y,AC,S,Macloc,quarterSweep,halfSweep] = MacCode(Root_Chord, Tip_Chor
     halfsweepPos = [-Root_Chord*0.5 -yloc_sweep-(Tip_Chord*0.5)];
     halfSweep = atan(( halfsweepPos(1) - halfsweepPos(2) ) / Half_Span) * 180/pi;
 
-    figure()
-    plot(X,Y); hold on;
-    grid on; axis equal;
-    plot([0 Half_Span],[y1Root y1Tip],'k--');
-    plot([0 Half_Span],[y2Root y2Tip],'k--');
-    plot([0 Half_Span],[quarterSweepPos(1) quarterSweepPos(2)],'r--');
-    plot([0 Half_Span],[halfsweepPos(1) halfsweepPos(2)],'b--');
-    scatter(x_val,y_val,'ko')
+%     figure()
+%     plot(X,Y); hold on;
+%     grid on; axis equal;
+%     plot([0 Half_Span],[y1Root y1Tip],'k--');
+%     plot([0 Half_Span],[y2Root y2Tip],'k--');
+%     plot([0 Half_Span],[quarterSweepPos(1) quarterSweepPos(2)],'r--');
+%     plot([0 Half_Span],[halfsweepPos(1) halfsweepPos(2)],'b--');
+%     scatter(x_val,y_val,'ko')
 end
