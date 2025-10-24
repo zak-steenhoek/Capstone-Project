@@ -21,8 +21,8 @@ u = 0.99  ; % theoretical oswald factor
 Qw = 1/(u*sw);
 ew = 1/Qw   ; % Oswald Efficiency factor assuming inviscid flow
 Cw = 1 - 0.3617 ; % MAC of wing
-hw =   (1 - 0.4)/Cw ; % MAC/xcg
-hnw = 0.7/Cw    ; % MAC/xac of wing
+hw =   (1 - 0.4)/Cw ; % xcg/MAC
+hnw = 0.7/Cw    ; % xac of wing/MAC
 zw =  0    ; % Z Distance from wing's neutral point and a/c cg 
 alpha = linspace(-10, 10, 100).* pi/180;
 
