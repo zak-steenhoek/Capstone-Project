@@ -1,6 +1,6 @@
-%% UAS 1     Aft-Swept + Tail
 function [figure,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
     h, hn, tailsweephalf, tailspan, tailarea,lt)
+% UAS 1     Aft-Swept + Tail
 % Airfoil Wing Relations
 %  Using Values of wing and NACA 3412 Airfoil
 

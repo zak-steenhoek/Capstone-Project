@@ -169,6 +169,7 @@ patch(UAS2Fuselage,-UAS2x, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'r');
 grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.1]);
 title("Combined UAS"); hold off;
 
+% longituinal stability
 figure()
 [figure1,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(Lambdaw1, Wing1_halfSweep, wspan1, Wing1_S, df,...
     CMAC1,-h01, -NP1, Tail1_halfSweep, tspan1, Tail1_S,lt1);
