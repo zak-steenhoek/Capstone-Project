@@ -169,9 +169,14 @@ patch(UAS2Fuselage,-UAS2x, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'r');
 grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.1]);
 title("Combined UAS"); hold off;
 
-% figure()
-% [figure, aw] = UAS1_LongStab(Lambdaw1, Wing1_halfSweep, wspan1, Wing1_S, df,...
-%     CMAC1,h01, NP1, Tail1_halfSweep, tspan1, Tail1_S,lt1);
+figure()
+[figure1,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(Lambdaw1, Wing1_halfSweep, wspan1, Wing1_S, df,...
+    CMAC1,-h01, -NP1, Tail1_halfSweep, tspan1, Tail1_S,lt1);
 
 figure()
-[figure] = UAS2_LongStab(Lambdaw2, Wing2_halfSweep, wspan2, Wing2_S, df2,CMAC2,h02, NP2, Tail2_halfSweep, tspan2, Tail2_S,lt2);
+[figure2, aw2, cmc, Cmfa2, cm0wing2] = UAS2_LongStab(Lambdaw2, Wing2_halfSweep, wspan2, Wing2_S, df2,...
+    CMAC2,-h02, -NP2, Tail2_halfSweep, tspan2, Tail2_S,lt2);
+
+figure()
+[figure3] = Joined_LongStab(Wing1_S, Wing2_S,wspan1,wspan2, CMAC1, CMAC2,...
+    h01, h02, aw, aw2, Cmf, Cmfa2, cmt, cmc, cm0wing, cm0wing2);

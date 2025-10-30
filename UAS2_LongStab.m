@@ -1,7 +1,11 @@
 %% UAS 2 Forward Swept + Canard
-function [figure] = UAS2_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
+function [figure, aw2, cmc, Cmfa2, cm0wing2] = UAS2_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
     h, hn, tailsweephalf, tailspan, tailarea,lt)
 
+V = 13.889    ; % m/s max speed wanted
+a = 343 ; % m/s at ~ 120m (max ceiling)
+M = V/a;
+alpha = linspace(-10, 10, 100).* pi/180;
 % Airfoil Wing Relations
 Lambdawing2 = sweep;
 LambdaQwing2 = quarterSweep;
@@ -62,7 +66,7 @@ ec = 1/Qc   ; % Oswald Efficiency factor assuming inviscid flow
 % Theoretical Lift Curve of Tail Dependent on Aifoil Lift Curve Slope
 kc = 2*pi*(a0canard).^-1;
 
-ac = (2*pi*ARcanard) * (2 + sqrt( (ARcanard^2*(1-M^2)*(kt).^2).* (1 + (tan(Lambdahcanard)^2)/(1-M^2)) + 4)).^(-1);
+ac = (2*pi*ARcanard) * (2 + sqrt( (ARcanard^2*(1-M^2)*(kc).^2).* (1 + (tan(Lambdahcanard)^2)/(1-M^2)) + 4)).^(-1);
 
 clc = ac* alpha;
 
@@ -87,7 +91,7 @@ cmc = Vh_hatc*cl0canard + Vh_hatc*ac;
 
 % Moment of Fuselage
 EV2 = 6.28319*10^-3; % Effective Volume of Fuselage shape
-Cmfa2 = 2*EV2/(Swing*Cw); % Fuselage body moment angle of attack slope (destabilizing)
+Cmfa2 = 2*EV2/(Swing2*Cw2); % Fuselage body moment angle of attack slope (destabilizing)
 
 % Wing body pitching moment. 
 cm0wf2 = cm0wing2 * ARwing2*cos(Lambdawing2)^2/(ARwing2 + 2*cos(Lambdawing2)^2); % c_m0 is wing airfoil pitching moment
