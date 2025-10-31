@@ -15,7 +15,7 @@ NoseSetbackDist = 0.200; % [m]
 Root_Chord = 0.240; % [m]
 Tip_Chord = 0.060; % [m]
 Half_Span = 0.700; % [m]
-wspan1 = 2 * Half_Span;
+wspan1 = 1 * Half_Span;
 Sweep_Angle = 30 * (pi/180); Lambdaw1 = Sweep_Angle;
 [Wing1_X,Wing1_Y,Wing1_AC,Wing1_S,Wing1_MACloc,Wing1_quarterSweep,Wing1_halfSweep] = MacCode(Root_Chord, Tip_Chord, Half_Span, Sweep_Angle);
 Wing1_Y = Wing1_Y - NoseSetbackDist;
@@ -66,7 +66,7 @@ Root_Chord = 0.160; % [m]
 Tip_Chord = 0.040; % [m]
 Half_Span = 0.700; % [m]
 wspan2 = Half_Span * 2;
-Sweep_Angle = -10 * (pi/180); Lambdaw2 = Sweep_Angle;
+Sweep_Angle = -30 * (pi/180); Lambdaw2 = Sweep_Angle;
 [Wing2_X,Wing2_Y,Wing2_AC,Wing2_S,Wing2_MACloc,Wing2_quarterSweep,Wing2_halfSweep] = MacCode(Root_Chord, Tip_Chord, Half_Span, Sweep_Angle);
 Wing2_Y = Wing2_Y - NoseSetbackDist;
 Wing2_AC(2) = Wing2_AC(2) - NoseSetbackDist;
@@ -169,10 +169,11 @@ patch(UAS2Fuselage,-UAS2x, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'r');
 grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.1]);
 title("Combined UAS"); hold off;
 
-% longituinal stability
+%% longituinal stability %%
+% NOTE: xcg/MAC is needed to ensure correct data. h < hn for stability
 figure()
 [figure1,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(Lambdaw1, Wing1_halfSweep, wspan1, Wing1_S, df,...
-    CMAC1,-h01, -NP1, Tail1_halfSweep, tspan1, Tail1_S,lt1);
+    CMAC1,-h01, -h01, Tail1_halfSweep, tspan1, Tail1_S,lt1);
 
 figure()
 [figure2, aw2, cmc, Cmfa2, cm0wing2] = UAS2_LongStab(Lambdaw2, Wing2_halfSweep, wspan2, Wing2_S, df2,...

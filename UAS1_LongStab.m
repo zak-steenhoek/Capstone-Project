@@ -2,16 +2,16 @@ function [figure,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(sweep, quarterSweep, wing
     h, hn, tailsweephalf, tailspan, tailarea,lt)
 % UAS 1     Aft-Swept + Tail
 % Airfoil Wing Relations
-%  Using Values of wing and NACA 3412 Airfoil
+%  Using Values of wing and NACA 4412 Airfoil
 
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
 Lambdawing = sweep; % sweep
 LambdaQwing = quarterSweep; % half sweep angle at mid point line of wing planform
-a0wing = 6    ; % radians, lift curve slope of airfoil
-cd0wing = 0.00533;
-cm0wing = -0.0787;
+a0wing = 0.075*pi/180    ; % radians, lift curve slope of airfoil
+cd0wing = 0.015;
+cm0wing = -0.055;
 Swing = wingarea    ; % wing area
 bwing = wingspan; % wing span
 ARwing = bwing^2/Swing;
@@ -22,17 +22,17 @@ u = 0.99  ; % theoretical oswald factor
 Qw = 1/(u*sw);
 ew = 1/Qw   ; % Oswald Efficiency factor assuming inviscid flow
 Cw = MAC ; % MAC of wing
-hw =   h ; % xcg/MAC
+hw =   0.2 ; % xcg/MAC
 hnw = hn   ; % xac of wing/MAC
-zw =  1    ; % Z Distance from wing's neutral point and a/c cg 
-alpha = linspace(-10, 10, 100).* pi/180;
+zw =  0   ; % Z Distance from wing's neutral point and a/c cg 
+alpha = linspace(-10, 10, 100000).* pi/180;
 
 
 % Theoretical Lift Curve of Wing Dependent on Aifoil Lift Curve Slope
 
 kw = 2*pi*(a0wing).^-1;
 
-aw = (pi*ARwing) * (1 + sqrt( ((1-M^2)*(a0wing*cos(LambdaQwing)))*(1 - ((pi*ARwing)/(cos(LambdaQwing)^2))^2))).^-1;
+aw = (pi*ARwing) * (1 + sqrt(1+ ((1-M^2)*(cos(LambdaQwing)))*(((pi*ARwing)/(a0wing*cos(LambdaQwing)))^2))).^-1;
 %aw = (2*pi*ARwing) * (2 + sqrt( (ARwing^2*(1-M^2)*(kw)^2)* (1 + (tan(LambdaQwing)^2)/(1-M^2)) + 4)).^-1;
 % ^should be lambda at half chord line on wing
 
@@ -47,8 +47,10 @@ cdw = cd0wing + clw.^2.*(pi * ARwing * ew)^(-1); % full lambda used
 % Theoretical Moment Coefficient of wing from cd and cl values
 
 cmw = cm0wing + (clw.*cos(alpha) + cdw.*sin(alpha)).*(hw-hnw) + (clw.*sin(alpha)-cdw.*cos(alpha)).*(zw/Cw);
-
-
+% 
+% figure = plot(alpha.*180/pi,cmw); title("C_m vs \alpha", "UAS 1"); 
+% xlabel("angle of attack (^o)"); ylabel("Wing Moment Coefficient");
+% grid on; hold off
 
 
 % Airfoil Tail Relations
@@ -92,7 +94,7 @@ etahtail = (Vhtail/ V);
 
 % Theoretical Moment Coefficient of wing from cd and cl values
 
-cmt = -etahtail * Vh_hat*clt + etahtail*(Stail/Swing)*(hw-hnw)*clt;
+cmt = -etahtail * Vh_hat * clt + etahtail * (Stail/Swing) * (hw-hnw) * clt;
 
 % Moment of Whole body
 
@@ -104,9 +106,9 @@ Cmf = 2*EV/(Swing*Cw)*alpha;
 cm0wf = cm0wing * ARwing*cos(Lambdawing)^2/(ARwing + 2*cos(Lambdawing)^2); 
 % cm0wing is wing airfoil pitching moment, and full lambda used here
 
-Cm1 = cm0wf + cmw + cmt + Cmf; % Full moment coefficient to find longitudinal stability
+Cm1 = cm0wf + cmw + cmt; % + Cmf; % Full moment coefficient to find longitudinal stability
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
-
+% 
 figure = plot(alpha.*180/pi,Cm1); title("C_m vs \alpha", "UAS 1"); 
 xlabel("angle of attack (^o)"); ylabel("Total Moment Coefficient");
 grid on; hold off

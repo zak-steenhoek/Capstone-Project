@@ -4,7 +4,7 @@ function [figure] = Joined_LongStab(wingarea1, wingarea2, wingspan1,wingspan2, M
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
-alpha = linspace(-10, 10, 100).* pi/180;
+alpha = linspace(-10, 10, 100000).* pi/180;
 rho = 1.225; % Density at sea level (kg/m^3)
 Swing = wingarea1;
 Swing2 = wingarea2;
@@ -23,7 +23,7 @@ q = 1/2*rho*V^2;
 
 Cm12 = -l1*Swing/(C_n*S_n)*aw*alpha - l2*Swing2*q*aw2/(C_n*S_n)*alpha +...
     Swing*Cw*cm0wing/(S_n*C_n) + q*Swing2*Cw2/(S_n*C_n)*cm0wing2 +...
-    Cmf+Cmfa2+cmt+cmc;
+    +cmt+cmc;
 
 
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
