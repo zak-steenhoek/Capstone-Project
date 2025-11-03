@@ -9,9 +9,9 @@ alpha = linspace(-10, 10, 100000).* pi/180;
 % Airfoil Wing Relations
 Lambdawing2 = sweep;
 LambdaQwing2 = quarterSweep;
-a0wing2 = 6    ; % radians
-cd0wing2 = 0.00533;
-cm0wing2 = -0.0787;
+a0wing2 = 6;% 2.006*pi    ; % radians (6)
+cd0wing2 = 0.00533;% 0.01331; % (0.00533)
+cm0wing2 = -0.787; %-0.1568; % (-0.0787)
 Swing2 = wingarea;
 bwing2 = wingspan;
 ARwing2 = bwing2^2/Swing2;

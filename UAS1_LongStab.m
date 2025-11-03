@@ -2,16 +2,16 @@ function [figure,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(sweep, quarterSweep, wing
     h, hn, tailsweephalf, tailspan, tailarea,lt)
 % UAS 1     Aft-Swept + Tail
 % Airfoil Wing Relations
-%  Using Values of wing and NACA 4412 Airfoil
+%  Using Values of wing and DAE31 Airfoil
 
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
 Lambdawing = sweep; % sweep
 LambdaQwing = quarterSweep; % half sweep angle at mid point line of wing planform
-a0wing = 0.075*pi/180    ; % radians, lift curve slope of airfoil
-cd0wing = 0.015;
-cm0wing = -0.055;
+a0wing = 2.006*pi   ; % radians, lift curve slope of airfoil
+cd0wing = 0.01331;
+cm0wing = -0.1568;
 Swing = wingarea    ; % wing area
 bwing = wingspan; % wing span
 ARwing = bwing^2/Swing;
