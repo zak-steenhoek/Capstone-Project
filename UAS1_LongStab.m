@@ -22,10 +22,11 @@ u = 0.99  ; % theoretical oswald factor
 Qw = 1/(u*sw);
 ew = 1/Qw   ; % Oswald Efficiency factor assuming inviscid flow
 Cw = MAC ; % MAC of wing
-hw =   0.2 ; % xcg/MAC
-hnw = hn   ; % xac of wing/MAC
+hw =   0.20/MAC ; % xcg/MAC
+hnw = hn/MAC   ; % xac of wing/MAC
 zw =  0   ; % Z Distance from wing's neutral point and a/c cg 
 alpha = linspace(-10, 10, 100000).* pi/180;
+alpha1 = alpha -6.82 * pi/180;
 
 
 % Theoretical Lift Curve of Wing Dependent on Aifoil Lift Curve Slope
@@ -36,7 +37,7 @@ aw = (pi*ARwing) * (1 + sqrt(1+ ((1-M^2)*(cos(LambdaQwing)))*(((pi*ARwing)/(a0wi
 %aw = (2*pi*ARwing) * (2 + sqrt( (ARwing^2*(1-M^2)*(kw)^2)* (1 + (tan(LambdaQwing)^2)/(1-M^2)) + 4)).^-1;
 % ^should be lambda at half chord line on wing
 
-clw = aw * alpha;
+clw = aw * alpha1;
 
 
 % Theoretical Drag coefficient using C_d min from a given airfoil
@@ -46,7 +47,7 @@ cdw = cd0wing + clw.^2.*(pi * ARwing * ew)^(-1); % full lambda used
 
 % Theoretical Moment Coefficient of wing from cd and cl values
 
-cmw = cm0wing + (clw.*cos(alpha) + cdw.*sin(alpha)).*(hw-hnw) + (clw.*sin(alpha)-cdw.*cos(alpha)).*(zw/Cw);
+cmw = cm0wing + (clw.*cos(alpha1) + cdw.*sin(alpha1)).*(hw-hnw) + (clw.*sin(alpha1)-cdw.*cos(alpha1)).*(zw/Cw);
 % 
 % figure = plot(alpha.*180/pi,cmw); title("C_m vs \alpha", "UAS 1"); 
 % xlabel("angle of attack (^o)"); ylabel("Wing Moment Coefficient");
@@ -58,8 +59,10 @@ cmw = cm0wing + (clw.*cos(alpha) + cdw.*sin(alpha)).*(hw-hnw) + (clw.*sin(alpha)
 
 Lambdahtail = tailsweephalf;
 a0tail = 2*pi; % lift-curve slope of airfoil
-cd0tail = 0.007;
-cm0tail = 0;
+% cd0tail = 0.007; %0.007
+% cm0tail = 0; %0
+cd0tail = 0.01331;
+cm0tail = -0.1568;
 Stail = tailarea;
 btail = tailspan;
 ARtail = btail^2/Stail;
@@ -70,12 +73,17 @@ u = 0.99  ; % theoretical oswald factor
 Qt = 1/(u*st);
 et = 1/Qt   ; % Oswald Efficiency factor assuming inviscid flow
 
+% Downwash angle of tail
+epsilon = 2 * aw.* (pi*ARwing)^(-1); % d(epsilon)/d(alpha)
+epsilon0 = 0; % downwash angle at zero angle of attack for airfoil/wing section
+it = 0; % Angle of incidence -- NOTE: 
+
 % Theoretical Lift Curve of Tail Dependent on Aifoil Lift Curve Slope
 kt = 2*pi*(a0tail).^-1;
 
 at = (2*pi*ARtail) * (2 + sqrt( (ARtail^2*(1-M^2)*(kt).^2).* (1 + (tan(Lambdahtail)^2)/(1-M^2)) + 4)).^(-1);
 
-clt = at* alpha;
+clt = at* alpha*(1 - epsilon) - at*(epsilon0 + it);
 
 
 % Theoretical Drag coefficient using C_d min from a given airfoil
@@ -90,7 +98,8 @@ Vhtail = Vh_hat - Stail/Swing * (hw - hnw); % Tail effective velocity
 
 % Tail Efficiency
 
-etahtail = (Vhtail/ V);
+etahtail = (Vhtail/ V)^2;
+
 
 % Theoretical Moment Coefficient of wing from cd and cl values
 

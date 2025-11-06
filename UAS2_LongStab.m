@@ -5,7 +5,8 @@ function [figure, aw2, cmc, Cmfa2, cm0wing2] = UAS2_LongStab(sweep, quarterSweep
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
-alpha = linspace(-10, 10, 100000).* pi/180;
+alpha = linspace(-10, 10, 100000).* pi/180 ; %- alpha;
+alpha1 = alpha -6.82 * pi/180;
 % Airfoil Wing Relations
 Lambdawing2 = sweep;
 LambdaQwing2 = quarterSweep;
@@ -33,7 +34,7 @@ kw2 = 2*pi*(a0wing2).^-1;
 %aw2 = (2*pi*ARwing2) * (2 + sqrt( (ARwing2^2*(1-M^2)*(kw2).^2).* (1 + (tan(Lambdawing2)^2)/(1-M^2)) + 4)).^(-1);
 aw2 = (pi*ARwing2) * (1 + sqrt( ((1-M^2)*(a0wing2*cos(LambdaQwing2)^2))* (1 - ((pi*ARwing2)/(cos(LambdaQwing2)^2))^2))).^-1;
 
-clw2 = real(aw2* alpha);
+clw2 = real(aw2* alpha1);
 
 
 % Theoretical Drag coefficient using C_d min from a given airfoil
@@ -43,7 +44,7 @@ cdw2 = cd0wing2 + real(clw2.^2./(pi * ARwing2 * ew2));
 
 % Theoretical Moment Coefficient of wing from cd and cl values
 
-cmw2 = +cm0wing2 + (clw2.*cos(alpha) + cdw2.*sin(alpha)).*(hw2+hnw2) + (clw2.*sin(alpha)-cdw2.*cos(alpha)).*(zw2/Cw2);
+cmw2 = +cm0wing2 + (clw2.*cos(alpha1) + cdw2.*sin(alpha1)).*(hw2+hnw2) + (clw2.*sin(alpha1)-cdw2.*cos(alpha1)).*(zw2/Cw2);
 
 % % plot showing C_m vs alpha; for stability, Cm_alpha is negative
 % figure = plot(alpha.*180/pi,cdw2); title("C_d vs \alpha", "UAS 2"); 

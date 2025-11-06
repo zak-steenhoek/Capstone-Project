@@ -12,7 +12,7 @@ UAS1Fuselage = [UAS1Fuselage -fliplr(UAS1Fuselage)];
 
 % Wing UAS 1
 NoseSetbackDist = 0.200; % [m]
-Root_Chord = 0.240; % [m] 
+Root_Chord = 0.240; % [m]
 Tip_Chord = 0.060; % [m]
 Half_Span = 0.700; % [m]
 wspan1 = 2 * Half_Span;
@@ -24,11 +24,11 @@ Wing1_MACloc = Wing1_MACloc - NoseSetbackDist;
 
 % Tail UAS 1
 TailSeperationDist = 0.550; % [m]
-Root_Chord = 0.160; % [m] 0.160
-Tip_Chord = 0.040; % [m] 0.040
+Root_Chord = 0.080; % [m] 0.160
+Tip_Chord = 0.080; % [m] 0.040
 Half_Span = 0.250; % [m]
 tspan1 = 2 * Half_Span;
-Sweep_Angle = 30 * (pi/180); Lambdat1 = Sweep_Angle;
+Sweep_Angle = 0 * (pi/180); Lambdat1 = Sweep_Angle;
 [Tail1_X,Tail1_Y,Tail1_AC,Tail1_S,Tail1_MACloc,Tail1_quarterSweep,Tail1_halfSweep] = MacCode(Root_Chord, Tip_Chord, Half_Span, Sweep_Angle);
 Tail1_Y = Tail1_Y - TailSeperationDist - NoseSetbackDist;
 Tail1_AC(2) = Tail1_AC(2) - TailSeperationDist - NoseSetbackDist;
@@ -66,7 +66,7 @@ Root_Chord = 0.160; % [m]
 Tip_Chord = 0.040; % [m]
 Half_Span = 0.700; % [m]
 wspan2 = Half_Span * 2;
-Sweep_Angle = -10 * (pi/180); Lambdaw2 = Sweep_Angle;
+Sweep_Angle = -30 * (pi/180); Lambdaw2 = Sweep_Angle;
 [Wing2_X,Wing2_Y,Wing2_AC,Wing2_S,Wing2_MACloc,Wing2_quarterSweep,Wing2_halfSweep] = MacCode(Root_Chord, Tip_Chord, Half_Span, Sweep_Angle);
 Wing2_Y = Wing2_Y - NoseSetbackDist;
 Wing2_AC(2) = Wing2_AC(2) - NoseSetbackDist;
@@ -181,4 +181,4 @@ figure()
 
 figure()
 [figure3] = Joined_LongStab(Wing1_S, Wing2_S,wspan1,wspan2, CMAC1, CMAC2,...
-    -NP1, -NP2, aw, aw2, cmt, cmc, cm0wing, cm0wing2, Lambdaw2);
+    h01, h02, aw, aw2, Cmf, Cmfa2, cmt, cmc, cm0wing, cm0wing2);
