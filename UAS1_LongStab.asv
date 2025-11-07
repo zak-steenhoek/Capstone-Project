@@ -26,7 +26,6 @@ hw =   0.20/MAC ; % xcg/MAC
 hnw = hn/MAC   ; % xac of wing/MAC
 zw =  0   ; % Z Distance from wing's neutral point and a/c cg 
 alpha = linspace(-10, 10, 100000).* pi/180;
-alpha1 = alpha -6.82 * pi/180;
 
 
 % Theoretical Lift Curve of Wing Dependent on Aifoil Lift Curve Slope
@@ -37,7 +36,7 @@ aw = (pi*ARwing) * (1 + sqrt(1+ ((1-M^2)*(cos(LambdaQwing)))*(((pi*ARwing)/(a0wi
 %aw = (2*pi*ARwing) * (2 + sqrt( (ARwing^2*(1-M^2)*(kw)^2)* (1 + (tan(LambdaQwing)^2)/(1-M^2)) + 4)).^-1;
 % ^should be lambda at half chord line on wing
 
-clw = aw * alpha1;
+clw = aw * alpha;
 
 
 % Theoretical Drag coefficient using C_d min from a given airfoil
@@ -47,7 +46,7 @@ cdw = cd0wing + clw.^2.*(pi * ARwing * ew)^(-1); % full lambda used
 
 % Theoretical Moment Coefficient of wing from cd and cl values
 
-cmw = cm0wing + (clw.*cos(alpha1) + cdw.*sin(alpha1)).*(hw-hnw) + (clw.*sin(alpha1)-cdw.*cos(alpha1)).*(zw/Cw);
+cmw = cm0wing + (clw.*cos(alpha) + cdw.*sin(alpha)).*(hw-hnw) + (clw.*sin(alpha)-cdw.*cos(alpha)).*(zw/Cw);
 % 
 % figure = plot(alpha.*180/pi,cmw); title("C_m vs \alpha", "UAS 1"); 
 % xlabel("angle of attack (^o)"); ylabel("Wing Moment Coefficient");

@@ -62,7 +62,7 @@ UAS2Fuselage = [UAS2Fuselage -fliplr(UAS2Fuselage)];
 
 % Wing UAS 2
 NoseSetbackDist = 0.750; % [m]
-Root_Chord = 0.160; % [m] 0.160
+Root_Chord = 0.200; % [m] 0.160
 Tip_Chord = 0.040; % [m] 0.40
 Half_Span = 0.700; % [m] 
 wspan2 = Half_Span * 2;
@@ -75,7 +75,7 @@ Wing2_MACloc = Wing2_MACloc - NoseSetbackDist;
 % Tail UAS 2
 TailSeperationDist = -0.500; % [m]
 Root_Chord = 0.080; % [m]
-Tip_Chord = 0.020; % [m]
+Tip_Chord = 0.040; % [m]
 Half_Span = 0.200; % [m]
 tspan2 = Half_Span * 2;
 Sweep_Angle = 30 * (pi/180);
