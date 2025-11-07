@@ -15,7 +15,7 @@ Cw = MAC1; Cw2 = MAC2;
 
 l1 = (np1-0.4); % Distance from MAC to cg of Front Wing
 l2 = (np2-0.4); % Distance from MAC to cg of aft wing
-q = 1/2*rho*V^2;
+q = 0.5*rho*V^2;
 alpha0 = -6.82 * pi/180;
 %n = ; % Load Factor of joined craft
 %g = 9.81; % m/s^2 acceleration due to gravity
@@ -32,7 +32,7 @@ kv = 1; kb = pi/4;
 x = abs(np1 - np2);
 xbar = x/(wingspan2/2);
 % zbar = abs(np1z - np2z)/(wingspan2/2); ADD THIS ONE LATER!!!!
-y = 0; ybar = y;
+y = 0.0; ybar = y;
 rbar = sqrt(xbar^2+ybar^2); sbar = kb*tan(lambdaw2);
 tbar = sqrt((xbar-sbar)^2 + ybar^2 + kb^2);
 tbar0 = sqrt(xbar^2+ybar^2+kb^2);
@@ -61,9 +61,9 @@ alpha2 = alpha - alpha0  - epsilon; % effective aoa of UAS 2
 %%%%%%%%% should, however, keep the wings as far apart as possible for
 %%%%%%%%% aerodynamic efficiency.
 
-Cm12 = -l1*Swing/(C_n*S_n)*aw*alpha1 - l2*Swing2*q*aw2/(C_n*S_n)*alpha2 +...
-    Swing*Cw*cm0wing/(S_n*C_n) + q*Swing2*Cw2/(S_n*C_n)*cm0wing2 +...
-    +cmt+cmc;
+Cm12 = -l1*Swing/(C_n*S_n)*aw*alpha1 - l2*Swing2*aw2/(C_n*S_n)*alpha2 +...
+    Swing*Cw*cm0wing/(S_n*C_n) + Swing2*Cw2/(S_n*C_n)*cm0wing2;% +...
+    %+cmt+cmc;
 
 
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
