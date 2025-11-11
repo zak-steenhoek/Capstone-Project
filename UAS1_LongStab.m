@@ -4,7 +4,7 @@ function [figure,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(sweep, quarterSweep, wing
 % Airfoil Wing Relations
 %  Using Values of wing and DAE31 Airfoil
 
-V = 13.889    ; % m/s max speed wanted
+V = 13.889 ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
 Lambdawing = sweep; % sweep
@@ -22,11 +22,11 @@ u = 0.99  ; % theoretical oswald factor
 Qw = 1/(u*sw);
 ew = 1/Qw   ; % Oswald Efficiency factor assuming inviscid flow
 Cw = MAC ; % MAC of wing
-hw =   0.20/MAC ; % xcg/MAC
+hw =   0.40/MAC ; % xcg/MAC
 hnw = hn/MAC   ; % xac of wing/MAC
-zw =  0   ; % Z Distance from wing's neutral point and a/c cg 
+zw =  0.0   ; % Z Distance from wing's neutral point and a/c cg 
 alpha = linspace(-10, 10, 100000).* pi/180;
-alpha1 = alpha -6.82 * pi/180;
+alpha1 = alpha - 6.82 * pi/180;
 
 
 % Theoretical Lift Curve of Wing Dependent on Aifoil Lift Curve Slope
@@ -57,10 +57,10 @@ cmw = cm0wing + (clw.*cos(alpha1) + cdw.*sin(alpha1)).*(hw-hnw) + (clw.*sin(alph
 % Airfoil Tail Relations
 % NACA 0012
 
-Lambdahtail = tailsweephalf;
+LambdaQtail = tailsweephalf;
 a0tail = 2*pi; % lift-curve slope of airfoil
-% cd0tail = 0.007; %0.007
-% cm0tail = 0; %0
+%cd0tail = 0.007; %0.007
+%cm0tail = 0; %0
 cd0tail = 0.01331;
 cm0tail = -0.1568;
 Stail = tailarea;
@@ -76,12 +76,15 @@ et = 1/Qt   ; % Oswald Efficiency factor assuming inviscid flow
 % Downwash angle of tail
 epsilon = 2 * aw.* (pi*ARwing)^(-1); % d(epsilon)/d(alpha)
 epsilon0 = 0; % downwash angle at zero angle of attack for airfoil/wing section
-it = 0; % Angle of incidence -- NOTE: 
+it = 20 * pi/180; % Angle of incidence -- NOTE: 
 
 % Theoretical Lift Curve of Tail Dependent on Aifoil Lift Curve Slope
 kt = 2*pi*(a0tail).^-1;
 
-at = (2*pi*ARtail) * (2 + sqrt( (ARtail^2*(1-M^2)*(kt).^2).* (1 + (tan(Lambdahtail)^2)/(1-M^2)) + 4)).^(-1);
+%at = (2*pi*ARtail) * (2 + sqrt( (ARtail^2*(1-M^2)*(kt).^2).* (1 + (tan(Lambdahtail)^2)/(1-M^2)) + 4)).^(-1);
+at = (pi*ARtail) * (1 + sqrt(1+ ...
+    ((1-M^2)*(cos(LambdaQtail)))*(((pi*ARtail)/...
+    (a0tail*cos(LambdaQtail)))^2))).^-1;
 
 clt = at* alpha*(1 - epsilon) - at*(epsilon0 + it);
 
@@ -92,13 +95,13 @@ cdt = cd0tail + clt.^2.*(pi * ARtail * et);
 
 % Horizontal Tail Volume Ratio
 
-ltail = lt   ; % Distance from tail aerodynamic center to wing aerodynamic center
+ltail =  lt   ; % Distance from tail aerodynamic center to wing aerodynamic center
 Vh_hat = (ltail * Stail)/(Cw*Swing);
-Vhtail = Vh_hat - Stail/Swing * (hw - hnw); % Tail effective velocity
+Vhtail = Vh_hat - Stail/Swing * (hw - hnw); % Tail effective volume
 
 % Tail Efficiency
 
-etahtail = (Vhtail/ V)^2;
+etahtail = 0.9;
 
 
 % Theoretical Moment Coefficient of wing from cd and cl values
@@ -115,7 +118,7 @@ Cmf = 2*EV/(Swing*Cw)*alpha;
 cm0wf = cm0wing * ARwing*cos(Lambdawing)^2/(ARwing + 2*cos(Lambdawing)^2); 
 % cm0wing is wing airfoil pitching moment, and full lambda used here
 
-Cm1 = cm0wf + cmw + cmt; % + Cmf; % Full moment coefficient to find longitudinal stability
+Cm1 = cm0wf + cmw + cmt ;%+ Cmf; % Full moment coefficient to find longitudinal stability
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
 % 
 figure = plot(alpha.*180/pi,Cm1); title("C_m vs \alpha", "UAS 1"); 

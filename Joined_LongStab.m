@@ -57,10 +57,10 @@ alpha2 = alpha - alpha0  - epsilon; % effective aoa of UAS 2
 
 %% Effective velocity on Forward Swept wing
 
-Vhh = (l1 - l2)*wingarea2/(Cw * wingarea1);
-Vh = Vhh - (wingarea1)/(wingarea2) * (l2 - (np1 - np2))
+% Vhh = (l1 - l2)*wingarea2/(Cw * wingarea1);
+% Vh = Vhh - (wingarea1)/(wingarea2) * (l2 - (np1 - np2))
 
-eta = Vh^2/V^2;
+eta = 0.9;
 
 %% Moment of whole Aircraft 
 
