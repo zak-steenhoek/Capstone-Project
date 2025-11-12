@@ -1,6 +1,6 @@
 %% UAS 2 Forward Swept + Canard
 function [figure, aw2, cmc, Cmf2, cm0wing2] = UAS2_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
-    h, hn, tailsweephalf, tailspan, tailarea,lt)
+    hnw, hnwb, tailsweephalf, tailspan, tailarea,lt)
 
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
@@ -25,7 +25,7 @@ ew2 = 1/Qw2   ; % Oswald Efficiency factor assuming inviscid flow
 zw2 = 0  ;   % Z Distance from wing's neutral point and a/c cg 
 Cw2 = MAC  ; % MAC of wing
 hw2 = 0.5/MAC ; % xcg/MAC
-hnw2 = hn/MAC    ; % xac of wing/MAC
+hnw2 = hnw/MAC    ; % xac of wing/MAC
 
 % Theoretical Lift Curve of Wing Dependent on Aifoil Lift Curve Slope
 

@@ -13,8 +13,8 @@ S_n = wingspan1 + wingspan2; % Total Wing Span
 C_n = MAC1 + MAC2; % Total MAC
 Cw = MAC1; Cw2 = MAC2;
 
-l1 = (np1-0.45); % Distance from MAC to cg of Front Wing
-l2 = (np2-0.45); % Distance from MAC to cg of aft wing
+l1 = (np1-0.45); % Distance from AC of Front Wing to cg
+l2 = (np2-0.45); % Distance from AC of aft wing to cg
 q = 0.5*rho*V^2;
 alpha0 = -6.82 * pi/180;
 %n = ; % Load Factor of joined craft
@@ -29,7 +29,7 @@ alpha1 = alpha - alpha0; % zero-lift angle of attack of forward wing
 % Elliptical wing constants                        
 kv = 1; kb = pi/4;
 
-x = abs(np1 - np2);
+x = (np1 + np2); % Distance between each wings aerodynamic center
 xbar = x/(wingspan2/2);
 % zbar = abs(np1z - np2z)/(wingspan2/2); ADD THIS ONE LATER!!!!
 y = 0.00; ybar = y;
@@ -56,9 +56,6 @@ epsilon = epsilon_alpha * alpha1;
 alpha2 = alpha - alpha0  - epsilon; % effective aoa of UAS 2
 
 %% Effective velocity on Forward Swept wing
-
-% Vhh = (l1 - l2)*wingarea2/(Cw * wingarea1);
-% Vh = Vhh - (wingarea1)/(wingarea2) * (l2 - (np1 - np2))
 
 eta = 0.9;
 

@@ -1,5 +1,5 @@
 function [figure,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
-    h, hn, tailsweephalf, tailspan, tailarea,lt)
+    hnw, hnwb, tailsweephalf, tailspan, tailarea,lt)
 % UAS 1     Aft-Swept + Tail
 % Airfoil Wing Relations
 %  Using Values of wing and DAE31 Airfoil
@@ -22,8 +22,8 @@ u = 0.99  ; % theoretical oswald factor
 Qw = 1/(u*sw);
 ew = 1/Qw   ; % Oswald Efficiency factor assuming inviscid flow
 Cw = MAC ; % MAC of wing
-hw =   0.40/MAC ; % xcg/MAC
-hnw = hn/MAC   ; % xac of wing/MAC
+hw =   0.10/MAC ; % xcg/MAC
+hnw = hnw/MAC   ; % xac of wing/MAC
 zw =  0.0   ; % Z Distance from wing's neutral point and a/c cg 
 alpha = linspace(-10, 10, 100000).* pi/180;
 alpha1 = alpha - 6.82 * pi/180;
@@ -106,7 +106,7 @@ etahtail = 0.9;
 
 % Theoretical Moment Coefficient of wing from cd and cl values
 
-cmt = -etahtail * Vh_hat * clt + etahtail * (Stail/Swing) * (hw-hnw) * clt;
+cmt = -etahtail * Vh_hat * clt + etahtail * (Stail/Swing) * (hw-hnwb) * clt;
 
 % Moment of Whole body
 
