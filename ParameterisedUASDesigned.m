@@ -119,6 +119,8 @@ Wing2_AC(2) = Wing2_AC(2) - NoseSetbackDist;
 Tail2_Y = Tail2_Y - x2 - NoseSetbackDist;
 Tail2_AC(2) = Tail2_AC(2) - x2 - NoseSetbackDist;
 
+aw = (pi*ARwing) * (1 + sqrt(1+ ((1-M^2)*(cos(LambdaQwing)))*(((pi*ARwing)/(a0wing*cos(LambdaQwing)))^2))).^-1;
+
 % % Compute NP % %
 % NP1
 at1 = 2*pi; % lift curve slope tail
