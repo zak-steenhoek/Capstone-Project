@@ -1,7 +1,7 @@
 %% Parameterised UAS Designed
 clc; clear; close all;
 
-numberOfItterations = 250000;
+numberOfItterations = 10000;
 
 Cr1 = [0.150 0.200];    % [m]
 Cr2 = [0.100 0.200];    % [m]
@@ -10,7 +10,7 @@ b = [1.000 1.400];      % [m]
 Sweep1 = [20 40];       % [deg]
 Sweep2 = [-30 -20];     % [deg] 
 x1 = [0.600 0.850];     % [m]
-x2 = [-0.200 -0.600];   % [m]
+x2 = [-0.500 -0.600];   % [m]
 
 Cr1_t = [0.080 0.250];  % [m]
 b1_t = [0.300 0.600];   % [m]
@@ -95,6 +95,7 @@ semilogx(linspace(1,numberOfItterations,numberOfItterations-1),ItterationHold*10
 
 
 function [NP1, NP2, hn, CMAC1, CMAC2] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,printresults)
+M = 13.90 / 343; % m/s to Mach
 Cr1 = a(1);Cr2 = a(2);Ct = a(3);b = a(4);Sweep1 = a(5);Sweep2 = a(6);x1 = a(7);x2 = a(8);Cr1_t = a(9); b1_t = a(10);Cr2_t = a(11);b2_t = a(12);Ct1_t = a(13);Sweep1_t = a(14);Ct2_t = a(15);Sweep2_t = a(16);
 % % DEFINE AIRCRAFT % %
 % UAS 1
@@ -119,12 +120,17 @@ Wing2_AC(2) = Wing2_AC(2) - NoseSetbackDist;
 Tail2_Y = Tail2_Y - x2 - NoseSetbackDist;
 Tail2_AC(2) = Tail2_AC(2) - x2 - NoseSetbackDist;
 
-aw = (pi*ARwing) * (1 + sqrt(1+ ((1-M^2)*(cos(LambdaQwing)))*(((pi*ARwing)/(a0wing*cos(LambdaQwing)))^2))).^-1;
+Wing1_quarterSweep = Wing1_quarterSweep * pi/180; Tail1_quarterSweep = Tail1_quarterSweep * pi/180;
 
 % % Compute NP % %
 % NP1
-at1 = 2*pi; % lift curve slope tail
 aw1 = 2*pi; % lift curve slope wing
+at1 = 2*pi; % lift curve slope tail
+ARwing = b^2 / Wing1_S;
+aw1 = (pi*ARwing) * (1 + sqrt(1+ ((1-M^2)*(cos(Wing1_quarterSweep)))*(((pi*ARwing)/(aw1*cos(Wing1_quarterSweep)))^2))).^-1;
+ARtail = b1_t^2 / Tail1_S;
+at1 = (pi*ARtail) * (1 + sqrt(1+ ((1-M^2)*(cos(Tail1_quarterSweep)))*(((pi*ARtail)/(at1*cos(Tail1_quarterSweep)))^2))).^-1;
+
 CMAC1 = abs(Wing1_MACloc(1) - Wing1_MACloc(2));
 lt = abs(Wing1_AC(2) - Tail1_AC(2));
 Vt = (lt*Tail1_S) / (Wing1_S*CMAC1);
@@ -133,13 +139,18 @@ NP1 = Wing1_AC(2) - CMAC1*0.6*Vt*(at1/aw1);
 % NP2
 at2 = 2*pi; % lift curve slope tail
 aw2 = 2*pi; % lift curve slope wing
+ARwing2 = b^2 / Wing2_S;
+aw2 = (pi*ARwing2) * (1 + sqrt(1+ ((1-M^2)*(cos(Wing2_quarterSweep)))*(((pi*ARwing2)/(aw2*cos(Wing2_quarterSweep)))^2))).^-1;
+ARtail2 = b2_t^2 / Tail2_S;
+at2 = (pi*ARtail2) * (1 + sqrt(1+ ((1-M^2)*(cos(Tail2_quarterSweep)))*(((pi*ARtail2)/(at2*cos(Tail2_quarterSweep)))^2))).^-1;
+
 CMAC2 = abs(Wing2_MACloc(1) - Wing2_MACloc(2));
-lt = abs(Wing2_AC(2) - Tail2_AC(2));
+lt = -abs(Wing2_AC(2) - Tail2_AC(2));
 Vt = (lt*Tail2_S) / (Wing2_S*CMAC2);
 NP2 = Wing2_AC(2) - CMAC2*0.6*Vt*(at2/aw2);
 
 % NP Combined
-h01 = Wing1_AC(2); h02 = Wing2_AC(2); l2 = -abs(Wing1_Y(1) - Wing2_Y(1)); de_da = 0;
+h01 = Wing1_AC(2); h02 = Wing2_AC(2); l2 = -abs(Wing1_Y(1) - Wing2_Y(1)); de_da = 2*aw1 / (pi*ARwing);
 hn = h01 + (l2 + h02*CMAC2 - h01*CMAC1)*(1-de_da)*(aw2/aw1) / (1 + (1-de_da)*(aw2/aw1));
 
 
@@ -158,7 +169,7 @@ if(printresults)
     plot([-Wing1_AC(1) -Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
     plot([Wing1_AC(1) -Wing1_AC(1)], [Wing1_AC(2) Wing1_AC(2)],'k:')
     scatter(0,NP1,'kdiamond',"filled");
-    grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.1]);
+    grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.2]);
     title("UAS 1 : ISR")
 
     % UAS 2
@@ -172,7 +183,7 @@ if(printresults)
     plot([-Wing2_AC(1) -Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
     plot([Wing2_AC(1) -Wing2_AC(1)], [Wing2_AC(2) Wing2_AC(2)],'k:')
     scatter(0,NP2,'kdiamond',"filled");
-    grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.1]);
+    grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.2]);
     title("UAS 2 : Payload Drop")
 
     % Combined Vehicle
@@ -192,7 +203,7 @@ if(printresults)
     plot([Wing1_AC(1) -Wing1_AC(1)], [Wing1_AC(2) Wing1_AC(2)],'k:')
     plot([Wing2_AC(1) -Wing2_AC(1)], [Wing2_AC(2) Wing2_AC(2)],'k:')
     scatter(0,hn,'kdiamond',"filled");
-    grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.1]);
+    grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.2]);
     title("Combined UAS"); 
 end
 end
