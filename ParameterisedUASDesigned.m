@@ -137,8 +137,7 @@ Vt = (lt*Tail2_S) / (Wing2_S*CMAC2);
 NP2 = Wing2_AC(2) - CMAC2*0.6*Vt*(at2/aw2);
 
 % NP Combined
-h01 = Wing1_AC(2); h02 = Wing2_AC(2); l2 = Wing1_Y(1) - Wing2_Y(1);
-de_da = 1;
+h01 = Wing1_AC(2); h02 = Wing2_AC(2); l2 = -abs(Wing1_Y(1) - Wing2_Y(1)); de_da = 0;
 hn = h01 + (l2 + h02*CMAC2 - h01*CMAC1)*(1-de_da)*(aw2/aw1) / (1 + (1-de_da)*(aw2/aw1));
 
 
