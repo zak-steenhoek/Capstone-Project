@@ -9,7 +9,7 @@ alpha = linspace(-10, 10, 100000).* pi/180 ; %- alpha;
 alpha1 = alpha -6.82 * pi/180;
 % Airfoil Wing Relations
 Lambdawing2 = sweep;
-LambdaQwing2 = quarterSweep;
+LambdaQwing2 = quarterSweep*pi/180;
 a0wing2 = 6;% 2.006*pi    ; % radians (6)
 cd0wing2 = 0.01331;% 0.01331; % (0.00533)
 cm0wing2 = -0.1568; %-0.1568; % (-0.0787)
@@ -24,7 +24,7 @@ Qw2 = 1/(u*sw2);
 ew2 = 1/Qw2   ; % Oswald Efficiency factor assuming inviscid flow
 zw2 = 0  ;   % Z Distance from wing's neutral point and a/c cg 
 Cw2 = MAC  ; % MAC of wing
-hw2 = 0.5/MAC ; % xcg/MAC
+hw2 = 0.20 ; % xcg/MAC
 hnw2 = hnw/MAC    ; % xac of wing/MAC
 
 % Theoretical Lift Curve of Wing Dependent on Aifoil Lift Curve Slope

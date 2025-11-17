@@ -8,7 +8,7 @@ V = 13.889 ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
 Lambdawing = sweep; % sweep
-LambdaQwing = quarterSweep; % half sweep angle at mid point line of wing planform
+LambdaQwing = quarterSweep*pi/180; % half sweep angle at mid point line of wing planform
 a0wing = 2.006*pi   ; % radians, lift curve slope of airfoil
 cd0wing = 0.01331;
 cm0wing = -0.1568;
@@ -22,7 +22,7 @@ u = 0.99  ; % theoretical oswald factor
 Qw = 1/(u*sw);
 ew = 1/Qw   ; % Oswald Efficiency factor assuming inviscid flow
 Cw = MAC ; % MAC of wing
-hw =   0.10/MAC ; % xcg/MAC
+hw =   0.20 ; % xcg/MAC
 hnw = hnw/MAC   ; % xac of wing/MAC
 zw =  0.0   ; % Z Distance from wing's neutral point and a/c cg 
 alpha = linspace(-10, 10, 100000).* pi/180;
@@ -76,7 +76,7 @@ et = 1/Qt   ; % Oswald Efficiency factor assuming inviscid flow
 % Downwash angle of tail
 epsilon = 2 * aw.* (pi*ARwing)^(-1); % d(epsilon)/d(alpha)
 epsilon0 = 0; % downwash angle at zero angle of attack for airfoil/wing section
-it = 20 * pi/180; % Angle of incidence -- NOTE: 
+it = 5.6 * pi/180; % Angle of incidence -- NOTE: 
 
 % Theoretical Lift Curve of Tail Dependent on Aifoil Lift Curve Slope
 kt = 2*pi*(a0tail).^-1;
