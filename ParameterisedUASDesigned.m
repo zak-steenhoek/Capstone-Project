@@ -3,9 +3,12 @@ clc; clear; close all;
 
 numberOfItterations = 10000;
 
-Cr1 = [0.150 0.200];    % [m]
-Cr2 = [0.100 0.200];    % [m]
-Ct = [0.060 0.100];     % [m]
+Swing1Convergence = 0.15;
+Swing2Convergence = 0.15;
+
+Cr1 = [0.100 0.400];    % [m]
+Cr2 = [0.100 0.400];    % [m]
+Ct = [0.060 0.200];     % [m]
 b = [1.000 1.400];      % [m]
 Sweep1 = [20 40];       % [deg]
 Sweep2 = [-30 -20];     % [deg] 
@@ -43,7 +46,7 @@ while i < numberOfItterations
     Combined_Stability = [0.20 0.30];
     UAS1_mass = 5; % [kg]
     UAS2_mass = UAS1_mass*massRatio; % [kg]
-    [NP1, NP2, hn, MAC1, MAC2] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,false);
+    [NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,false);
     
     CG1_for = NP1 + UAS1_Stability(2)*MAC1; CG1_aft = NP1 + UAS1_Stability(1)*MAC1;
     CG2_for = NP2 + UAS2_Stability(2)*MAC2; CG2_aft = NP2 + UAS2_Stability(1)*MAC2;
@@ -54,14 +57,20 @@ while i < numberOfItterations
     CGDelta(i,1) = min(CG_CombinedCalculated_for, CG_Combined_for);
     CGDelta(i,2) = max(CG_CombinedCalculated_aft, CG_Combined_aft);
 
-    if abs(CGDelta(i,1) - CGDelta(i,2)) < previousItteration
+    CGParameter = abs(CGDelta(i,1) - CGDelta(i,2));
+    S1Parameter = abs(Wing1_S*2 - Swing1Convergence);
+    S2Parameter = abs(Wing2_S*2 - Swing2Convergence);
+    CostFunction = CGParameter + S1Parameter + S2Parameter;
+
+    if CostFunction < previousItteration
         previousa = a;
-        previousItteration = abs(CGDelta(i,1) - CGDelta(i,2));
+        previousItteration = CostFunction;
     end
     ItterationHold(i) = previousItteration;
     
     t(i) = toc;
     fprintf("%.0f/%.0f : %.1f%% Complete : %.2f [ms] : ",i,numberOfItterations,(i/numberOfItterations)*100,t(i)*10^3)
+    fprintf("S1: %.2f : S2: %.2f : ",Wing1_S,Wing2_S)
     if CGDelta(i,1) > CGDelta(i,2)
         fprintf("CG %.1f <-> %.1f [mm]\n",CGDelta(i,1)*1000,CGDelta(i,2)*1000)
     else
@@ -78,7 +87,7 @@ semilogx(linspace(1,numberOfItterations,numberOfItterations-1),ItterationHold*10
 % optimal = find(abs(CGDelta(:,1) - CGDelta(:,2)) == (min(abs(CGDelta(:,1) - CGDelta(:,2)))));
 % for i = 1:length(optimal)
 %     a = parameterSpace(optimal(i),:);
-    [NP1, NP2, hn, MAC1, MAC2] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,true);
+    [NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,true);
 
     CG1_for = NP1 + UAS1_Stability(2)*MAC1; CG1_aft = NP1 + UAS1_Stability(1)*MAC1;
     CG2_for = NP2 + UAS2_Stability(2)*MAC2; CG2_aft = NP2 + UAS2_Stability(1)*MAC2;
@@ -94,7 +103,7 @@ semilogx(linspace(1,numberOfItterations,numberOfItterations-1),ItterationHold*10
 
 
 
-function [NP1, NP2, hn, CMAC1, CMAC2] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,printresults)
+function [NP1, NP2, hn, CMAC1, CMAC2,Wing1_S,Wing2_S] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,printresults)
 M = 13.90 / 343; % m/s to Mach
 Cr1 = a(1);Cr2 = a(2);Ct = a(3);b = a(4);Sweep1 = a(5);Sweep2 = a(6);x1 = a(7);x2 = a(8);Cr1_t = a(9); b1_t = a(10);Cr2_t = a(11);b2_t = a(12);Ct1_t = a(13);Sweep1_t = a(14);Ct2_t = a(15);Sweep2_t = a(16);
 % % DEFINE AIRCRAFT % %
