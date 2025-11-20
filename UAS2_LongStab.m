@@ -5,7 +5,7 @@ function [figure, aw2, cmc, Cmf2, cm0wing2] = UAS2_LongStab(sweep, quarterSweep,
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
-alpha = linspace(-10, 10, 100000).* pi/180 ; %- alpha;
+alpha = linspace(-20, 20, 100000).* pi/180 ; %- alpha;
 alpha1 = alpha -6.82 * pi/180;
 % Airfoil Wing Relations
 Lambdawing2 = sweep;

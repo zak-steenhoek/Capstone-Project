@@ -1,4 +1,4 @@
-function [figure,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
+function [figure,aw,cmt, Cmf, cm0wing, incident] = UAS1_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
     hnw, hnwb, tailsweephalf, tailspan, tailarea,lt)
 % UAS 1     Aft-Swept + Tail
 % Airfoil Wing Relations
@@ -12,7 +12,6 @@ LambdaQwing = quarterSweep*pi/180; % half sweep angle at mid point line of wing 
 a0wing = 2.006*pi   ; % radians, lift curve slope of airfoil
 cd0wing = 0.01331;
 cm0wing = -0.1568;
-cl0 = 0.7288;
 Swing = wingarea    ; % wing area
 bwing = wingspan; % wing span
 ARwing = bwing^2/Swing;
@@ -25,7 +24,7 @@ ew = 1/Qw   ; % Oswald Efficiency factor assuming inviscid flow
 Cw = MAC ; % MAC of wing
 hw =   0.20 ; % xcg/MAC
 hnw = hnw/MAC   ; % xac of wing/MAC
-zw =  0.01   ; % Z Distance from wing's neutral point and a/c cg 
+zw =  0.0   ; % Z Distance from wing's neutral point and a/c cg 
 alpha = linspace(-20, 20, 100000).* pi/180;
 alpha1 = alpha - 6.82 * pi/180;
 
@@ -77,7 +76,7 @@ et = 1/Qt   ; % Oswald Efficiency factor assuming inviscid flow
 % Downwash angle of tail
 epsilon = 2 * aw.* (pi*ARwing)^(-1); % d(epsilon)/d(alpha)
 epsilon0 = 6.82 * pi/180; % downwash angle at zero angle of attack for airfoil/wing section
-it = 12 * pi/180; % Angle of incidence -- NOTE: 
+it =  0* pi/180; % Angle of incidence -- NOTE: 
 
 % Theoretical Lift Curve of Tail Dependent on Aifoil Lift Curve Slope
 
@@ -88,7 +87,7 @@ at = (pi*ARtail) * (1 + sqrt(1+ ...
 
 clt = at * alpha*(1 - epsilon) - at*(epsilon0 + it);
 
-
+incident = clt.*(clt*at).^(-1);
 
 % Theoretical Drag coefficient using C_d min from a given airfoil
 
@@ -107,7 +106,7 @@ etahtail = 0.9;
 
 % Theoretical Moment Coefficient of wing from cd and cl values
 
-cmt = -etahtail * Vh_hat * clt + etahtail * (Stail/Swing) * (hw-hnw) * clt;
+cmt = -etahtail * Vh_hat * clt + etahtail * (Stail/Swing) * (hw-hnwb) * clt;
 
 % Moment of Whole body
 
@@ -119,7 +118,7 @@ Cmf = 2*EV/(Swing*Cw)*alpha;
 cm0wf = cm0wing * ARwing*cos(Lambdawing)^2/(ARwing + 2*cos(Lambdawing)^2); 
 % cm0wing is wing airfoil pitching moment, and full lambda used here
 
-Cm1 = cm0wf + cmw + cmt; %+ Cmf; % Full moment coefficient to find longitudinal stability
+Cm1 = 0*cm0wf + cmw + cmt ;%+ Cmf; % Full moment coefficient to find longitudinal stability
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
 % 
 figure = plot(alpha.*180/pi,Cm1); title("C_m vs \alpha", "UAS 1"); 

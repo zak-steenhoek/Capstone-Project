@@ -4,7 +4,7 @@ function [figure] = Joined_LongStab(wingarea1, wingarea2, wingspan1,wingspan2, M
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
-alpha = linspace(-20, 20, 100000).* pi/180;
+alpha = linspace(-10, 10, 100000).* pi/180;
 rho = 1.225; % Density at sea level (kg/m^3)
 Swing = wingarea1;
 Swing2 = wingarea2;
@@ -13,8 +13,8 @@ S_n = wingspan1 + wingspan2; % Total Wing Span
 C_n = MAC1 + MAC2; % Total MAC
 Cw = MAC1; Cw2 = MAC2;
 
-l1 = (np1- MAC2*0.20); % Distance from AC of Front Wing to cg
-l2 = (np2-MAC2*0.20); % Distance from AC of aft wing to cg
+l1 = (np1/MAC1-0.20); % Distance from AC of Front Wing to cg
+l2 = ((np2+0.2)/MAC2-0.20); % Distance from AC of aft wing to cg
 q = 0.5*rho*V^2;
 alpha0 = -6.82 * pi/180;
 %n = ; % Load Factor of joined craft
@@ -72,7 +72,7 @@ eta = 0.9;
 Cm12 = -l1*Swing/(C_n*S_n)*aw*alpha1 - eta*l2*Swing2*aw2/(C_n*S_n)*alpha2 +...
     Swing*Cw*cm0wing/(S_n*C_n) + eta*Swing2*Cw2/(S_n*C_n)*cm0wing2 ;%+...
     %+cmt+cmc;
-Cm12 = real(Cm12);
+
 
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
 figure = plot(alpha.*180/pi,Cm12); title("C_m vs \alpha", "Joined UAS"); 
