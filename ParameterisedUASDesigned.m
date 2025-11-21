@@ -1,9 +1,9 @@
 %% Parameterised UAS Designed
 clc; clear; close all;
 
-numberOfItterations = 10000;
+numberOfItterations = 50000;
 
-Swing1Convergence = 0.15;
+Swing1Convergence = 0.1833;
 Swing2Convergence = 0.15;
 
 Cr1 = [0.100 0.400];    % [m]
@@ -12,19 +12,19 @@ Ct = [0.060 0.200];     % [m]
 b = [1.000 1.400];      % [m]
 Sweep1 = [20 40];       % [deg]
 Sweep2 = [-30 -20];     % [deg] 
-x1 = [0.600 0.850];     % [m]
-x2 = [-0.500 -0.600];   % [m]
+x1 = [0.300 0.650];     % [m]
+x2 = [-0.300 -0.400];   % [m]
 
 Cr1_t = [0.080 0.250];  % [m]
 b1_t = [0.300 0.600];   % [m]
-Cr2_t = [0.040 0.200];  % [m]
-b2_t = [0.250 0.400];   % [m]
+Cr2_t = [0.020 0.200];  % [m]
+b2_t = [0.400 0.600];   % [m]
 Ct1_t = [0.040 0.060];  % [m]
 Sweep1_t = [0 30];      % [deg]
 Ct2_t = [0.020 0.040];  % [m]
 Sweep2_t = [0 30];      % [deg]
 
-massRatio = [0.50 1];
+massRatio = [0.830 0.831];
 
 fprintf("Computing %.0f Design Permutations\n\n",numberOfItterations)%length(parameterSpace))
 aStart = [mean(Cr1),mean(Cr2),mean(Ct),mean(b),mean(Sweep1),mean(Sweep2),mean(x1),mean(x2),...
@@ -44,7 +44,7 @@ while i < numberOfItterations
     UAS1_Stability = [0.15 0.35];
     UAS2_Stability = [0.15 0.35];
     Combined_Stability = [0.20 0.30];
-    UAS1_mass = 5; % [kg]
+    UAS1_mass = 3; % [kg]
     UAS2_mass = UAS1_mass*massRatio; % [kg]
     [NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,false);
     
@@ -70,7 +70,7 @@ while i < numberOfItterations
     
     t(i) = toc;
     fprintf("%.0f/%.0f : %.1f%% Complete : %.2f [ms] : ",i,numberOfItterations,(i/numberOfItterations)*100,t(i)*10^3)
-    fprintf("S1: %.2f : S2: %.2f : ",Wing1_S,Wing2_S)
+    fprintf("S1: %.2f : S2: %.2f : ",Wing1_S*2,Wing2_S*2)
     if CGDelta(i,1) > CGDelta(i,2)
         fprintf("CG %.1f <-> %.1f [mm]\n",CGDelta(i,1)*1000,CGDelta(i,2)*1000)
     else
@@ -101,7 +101,8 @@ semilogx(linspace(1,numberOfItterations,numberOfItterations-1),ItterationHold*10
     plot([0 0],[CG_CombinedCalculated_for CG_CombinedCalculated_aft],'m--','LineWidth', 4)
 % end
 
-
+fprintf("S1: %.2f : S2: %.2f : ",Wing1_S*2,Wing2_S*2)
+    
 
 function [NP1, NP2, hn, CMAC1, CMAC2,Wing1_S,Wing2_S] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,printresults)
 M = 13.90 / 343; % m/s to Mach

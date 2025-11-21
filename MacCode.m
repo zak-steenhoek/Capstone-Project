@@ -37,4 +37,10 @@ function [X,Y,AC,S,Macloc,quarterSweep,halfSweep] = MacCode(Root_Chord, Tip_Chor
 %     plot([0 Half_Span],[quarterSweepPos(1) quarterSweepPos(2)],'r--');
 %     plot([0 Half_Span],[halfsweepPos(1) halfsweepPos(2)],'b--');
 %     scatter(x_val,y_val,'ko')
+% 
+%     patch(X, Y, 'r', 'FaceAlpha', 0.2, 'EdgeColor', 'r'); hold on;
+%     patch(-X, Y, 'r', 'FaceAlpha', 0.2, 'EdgeColor', 'r');
+%     scatter([0 0],[AC(2) AC(2)],20,'ro',"filled");
+%     plot([AC(1) AC(1)], [Macloc(1) Macloc(2)],'k--')
+%     plot([AC(1) -AC(1)], [AC(2) AC(2)],'k:')
 end
