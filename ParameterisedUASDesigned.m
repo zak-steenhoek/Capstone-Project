@@ -40,6 +40,7 @@ while i < numberOfItterations
         clip(a(6),Sweep2(1),Sweep2(2)), clip(a(7),x1(1),x1(2)), clip(a(8),x2(1),x2(2)), clip(a(9),Cr1_t(1),Cr1_t(2)), ...
         clip(a(10),b1_t(1),b1_t(2)), clip(a(11),Cr2_t(1),Cr2_t(2)), clip(a(12),b2_t(1),b2_t(2)), clip(a(13),Ct1_t(1),Ct1_t(2)),...
         clip(a(14),Sweep1_t(1),Sweep1_t(2)), clip(a(15),Ct2_t(1),Ct2_t(2)), clip(a(16),Sweep2_t(1),Sweep2_t(2)), clip(a(13),massRatio(1),massRatio(2))];
+%     a = [0.2443, 0.1901, 0.1118, 1, 26.9019, -25.1542, 0.5797, -0.4, .166, .4799, .1052, .5022, .0488, 13.9466, 0.0271, 17.6445, 0.83];
 
     UAS1_Stability = [0.15 0.35];
     UAS2_Stability = [0.15 0.35];
@@ -48,6 +49,8 @@ while i < numberOfItterations
     UAS2_mass = UAS1_mass*massRatio; % [kg]
     [NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,false);
     
+    NP2 = real(NP2); hn = real(hn);
+
     CG1_for = NP1 + UAS1_Stability(2)*MAC1; CG1_aft = NP1 + UAS1_Stability(1)*MAC1;
     CG2_for = NP2 + UAS2_Stability(2)*MAC2; CG2_aft = NP2 + UAS2_Stability(1)*MAC2;
     CG_Combined_for = hn + Combined_Stability(2)*MAC1; CG_Combined_aft = hn + Combined_Stability(1)*MAC1;
@@ -83,11 +86,18 @@ fprintf("Minimum Cg Difference %f [mm]\n",min(abs(CGDelta(:,1) - CGDelta(:,2)))*
 
 figure()
 semilogx(linspace(1,numberOfItterations,numberOfItterations-1),ItterationHold*1000,'k-'); hold on; grid on;
+xlabel("Itterations"); ylabel("Cost Function");
+title("Parameterization Convergence")
 
 % optimal = find(abs(CGDelta(:,1) - CGDelta(:,2)) == (min(abs(CGDelta(:,1) - CGDelta(:,2)))));
 % for i = 1:length(optimal)
 %     a = parameterSpace(optimal(i),:);
+%
+%% a = [0.2443, 0.1901, 0.1118, 1, 26.9019, -25.1542, 0.5797, -0.4, .166, .4799, .1052, .5022, .0488, 13.9466, 0.0271, 17.6445, 0.83];
+    a = previousa;
     [NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,true);
+
+    NP2 = real(NP2); hn = real(hn);
 
     CG1_for = NP1 + UAS1_Stability(2)*MAC1; CG1_aft = NP1 + UAS1_Stability(1)*MAC1;
     CG2_for = NP2 + UAS2_Stability(2)*MAC2; CG2_aft = NP2 + UAS2_Stability(1)*MAC2;
@@ -95,10 +105,17 @@ semilogx(linspace(1,numberOfItterations,numberOfItterations-1),ItterationHold*10
     CG_CombinedCalculated_for = ((CG1_for * UAS1_mass) + (CG2_for * UAS2_mass)) / (UAS1_mass + UAS2_mass);
     CG_CombinedCalculated_aft = ((CG1_aft * UAS1_mass) + (CG2_aft * UAS2_mass)) / (UAS1_mass + UAS2_mass);
 
-    plot([0 0],[CG1_for CG1_aft],'b--','LineWidth', 4)
-    plot([0 0],[CG2_for CG2_aft],'r--','LineWidth', 4)
-    plot([0 0],[CG_Combined_for CG_Combined_aft],'k--','LineWidth', 4)
-    plot([0 0],[CG_CombinedCalculated_for CG_CombinedCalculated_aft],'m--','LineWidth', 4)
+    plot([0 0],[CG1_for CG1_aft],'b-','LineWidth', 4)
+    plot([0 0],[CG2_for CG2_aft],'r-','LineWidth', 4)
+    plot([0 0],[CG_Combined_for CG_Combined_aft],'k-','LineWidth', 4)
+    plot([0 0],[CG_CombinedCalculated_for CG_CombinedCalculated_aft],'m-','LineWidth', 4)
+    lgd = legend("","","","","","","","","","","","","","","NP_{UAS Combined}","CG_{UAS 1}","CG_{UAS 2}","CG_{Combined UAS (Combined Masses)}","CG_{Combined UAS (Aerodynamically Determined)}");
+    lgd.FontSize = 8;
+
+    set(0, 'Units', 'pixels');
+    screenSize = get(0, 'ScreenSize');
+    figWidth = 900; figHeight = 700;
+    set(gcf, 'Units', 'pixels', 'Position', [(screenSize(3) - figWidth) / 2, (screenSize(4) - figHeight) / 2, figWidth, figHeight]);
 % end
 
 fprintf("S1: %.2f : S2: %.2f : ",Wing1_S*2,Wing2_S*2)
@@ -181,6 +198,8 @@ if(printresults)
     scatter(0,NP1,'kdiamond',"filled");
     grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.2]);
     title("UAS 1 : ISR")
+    lgd = legend("","","","","1/4 MAC_{W/T}","","","","NP_{UAS 1}");
+    lgd.FontSize = 8;
 
     % UAS 2
     nexttile(top,2)
@@ -195,6 +214,8 @@ if(printresults)
     scatter(0,NP2,'kdiamond',"filled");
     grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.2]);
     title("UAS 2 : Payload Drop")
+    lgd = legend("","","","","1/4 MAC_{W/T}","","","","NP_{UAS 2}");
+    lgd.FontSize = 8;
 
     % Combined Vehicle
     nexttile(t,2)
@@ -215,6 +236,35 @@ if(printresults)
     scatter(0,hn,'kdiamond',"filled");
     grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.2]);
     title("Combined UAS"); 
+    lgd = legend("","","","","","","","","","","","","","","NP_{UAS Combined}");
+    lgd.FontSize = 8;
+
+    set(0, 'Units', 'pixels');
+    screenSize = get(0, 'ScreenSize');
+    figWidth = 800; figHeight = 700;
+    set(gcf, 'Units', 'pixels', 'Position', [(screenSize(3) - figWidth) / 2, (screenSize(4) - figHeight) / 2, figWidth, figHeight]);
+
+
+    figure()
+    patch(Wing1_X, Wing1_Y, 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'b'); hold on;
+    patch(Tail1_X, Tail1_Y, 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'b');
+    patch(Wing2_X, Wing2_Y, 'r', 'FaceAlpha', 0.2, 'EdgeColor', 'r');
+    patch(Tail2_X, Tail2_Y, 'r', 'FaceAlpha', 0.2, 'EdgeColor', 'r');
+    patch(-Wing1_X, Wing1_Y, 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'b');
+    patch(-Tail1_X, Tail1_Y, 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'b');
+    patch(-Wing2_X, Wing2_Y, 'r', 'FaceAlpha', 0.2, 'EdgeColor', 'r');
+    patch(-Tail2_X, Tail2_Y, 'r', 'FaceAlpha', 0.2, 'EdgeColor', 'r');
+    plot([Wing1_AC(1) Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
+    plot([Wing2_AC(1) Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
+    plot([-Wing1_AC(1) -Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
+    plot([-Wing2_AC(1) -Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
+    plot([Wing1_AC(1) -Wing1_AC(1)], [Wing1_AC(2) Wing1_AC(2)],'k:')
+    plot([Wing2_AC(1) -Wing2_AC(1)], [Wing2_AC(2) Wing2_AC(2)],'k:')
+    scatter(0,hn,'kdiamond',"filled");
+    grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.2]);
+    title("Combined UAS"); 
+%     lgd = legend("","","","","","","","","","","","","","","NP_{UAS Combined}");
+%     lgd.FontSize = 8;
 end
 end
 
