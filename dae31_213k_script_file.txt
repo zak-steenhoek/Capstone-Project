@@ -1,0 +1,21 @@
+load Airfoil Data\dae31.dat
+ppar 
+n 200
+
+
+oper
+iter 500
+visc 213061
+mach 0.0618
+pacc
+Polar\dae31_213k_polar.txt
+
+alfa 0
+aseq 0 20 0.1
+vpar
+init
+
+alfa 0
+aseq 0 -10 0.05
+
+quit
