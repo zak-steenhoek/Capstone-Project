@@ -10,9 +10,9 @@ alpha1 = alpha -6.82 * pi/180;
 % Airfoil Wing Relations
 Lambdawing2 = sweep;
 LambdaQwing2 = quarterSweep*pi/180;
-a0wing2 = 6;% 2.006*pi    ; % radians (6)
-cd0wing2 = 0.01331;% 0.01331; % (0.00533)
-cm0wing2 = -0.1568; %-0.1568; % (-0.0787)
+a0wing2 = 5.4571;% 2.006*pi    ; % radians (6)
+cd0wing2 = 0.01001;% 0.01331; % (0.00533)
+cm0wing2 = -0.1069; %-0.1568; % (-0.0787)
 Swing2 = wingarea;
 bwing2 = wingspan;
 ARwing2 = bwing2^2/Swing2;
@@ -33,7 +33,7 @@ kw2 = 2*pi*(a0wing2).^-1;
 
 %aw2 = (2*pi*ARwing2) * (2 + sqrt( (ARwing2^2*(1-M^2)*(kw2).^2).* (1 + (tan(Lambdawing2)^2)/(1-M^2)) + 4)).^(-1);
 aw2 = (pi*ARwing2) * (1 + sqrt( ((1-M^2)*(a0wing2*cos(LambdaQwing2)^2))* (1 - ((pi*ARwing2)/(cos(LambdaQwing2)^2))^2))).^-1;
-
+aw2 = abs(aw2);
 clw2 = real(aw2* alpha1);
 
 
