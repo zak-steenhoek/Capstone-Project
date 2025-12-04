@@ -77,7 +77,7 @@ et = 1/Qt   ; % Oswald Efficiency factor assuming inviscid flow
 % Downwash angle of tail
 epsilon = 2 * aw.* (pi*ARwing)^(-1); % d(epsilon)/d(alpha)
 epsilon0 = 2*pi*aw*alpha1*(pi*ARwing).^(-1); % downwash angle at zero angle of attack for airfoil/wing section
-it = 15 * pi/180; % Angle of incidence -- NOTE: 
+it = 0 * pi/180; % Angle of incidence -- NOTE: 
 
 % Theoretical Lift Curve of Tail Dependent on Aifoil Lift Curve Slope
 
