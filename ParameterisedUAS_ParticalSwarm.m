@@ -69,8 +69,13 @@ a_Output = a .* (parameter_Ranges(2,:) - parameter_Ranges(1,:)) + parameter_Rang
 
 % % Plot Final Aircraft % %
 aBuilt = [0.248452354142801	0.182663828512092	0.117459967277873	1	26.2489271471051	-24.6774759056559	0.519877481007816	-0.300000000000000	0.144788011777543	0.465664773550571	0.105433108732498	0.484744602166759	0.0581619329085618	16.5827041691186	0.0294809762192670	14.9644789083684	0 0.830000000000000];
+
+aNewAnalysis = [0.4887    0.7472    0.2361    0.2730    0.4764    0.4533    0.5850    0.3716    0.2947    0.8282    0.3573    0.2895    0.5715    0.4681    0.2509    0.7568    0.5541];
+a = aNewAnalysis;
+
 [NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a_Output,UAS1_Stability,UAS2_Stability,Combined_Stability,true,"");
 CombinedUASInputs(aBuilt,UAS1_Stability,UAS2_Stability,Combined_Stability,true,"ghost");
+
 
 NP2 = real(NP2); hn = real(hn);
 
@@ -82,10 +87,11 @@ CG_CombinedCalculated_aft = ((CG1_aft * UAS1_mass) + (CG2_aft * UAS2_mass)) / (U
 
 plot([0 0],[CG1_for CG1_aft],'b-','LineWidth', 4)
 plot([0 0],[CG2_for CG2_aft],'r-','LineWidth', 4)
-plot([0 0],[CG_Combined_for CG_Combined_aft],'k-','LineWidth', 4)
+plot([0 0],[CG_Combined_for CG_Combined_aft],'k-','LineWidth', 6)
 plot([0 0],[CG_CombinedCalculated_for CG_CombinedCalculated_aft],'m-','LineWidth', 4)
-lgd = legend("","","","","","","","","","","","","","","NP_{UAS Combined}","CG_{UAS 1}","CG_{UAS 2}","CG_{Combined UAS (Combined Masses)}","CG_{Combined UAS (Aerodynamically Determined)}");
+lgd = legend("","","","","","","","","NP_{UAS Combined}","","","","","","","","","CG_{UAS 1}","CG_{UAS 2}","CG_{Combined UAS (Combined Masses)}","CG_{Combined UAS (Aerodynamically Determined)}");
 lgd.FontSize = 8;
+xlabel("Lateral Axis [m]"); ylabel("Longitudinal Axis [m]")
 
 set(0, 'Units', 'pixels');
 screenSize = get(0, 'ScreenSize');
@@ -109,7 +115,7 @@ plot(PlotInverse.*[CG_Combined_for CG_Combined_for],[-0.02 0.02],'k-','LineWidth
 plot(PlotInverse.*[CG_CombinedCalculated_for CG_CombinedCalculated_for],[-0.12 -0.08],'m-','LineWidth', 1); plot(PlotInverse.*[CG_CombinedCalculated_aft CG_CombinedCalculated_aft],[-0.12 -0.08],'m-','LineWidth', 1);
 
 % scatter(-1.*[CG1_for, CG2_for, CG_Combined_for, CG_CombinedCalculated_for],[0.2, 0.1, 0, -0.1],'kx')
-scatter(PlotInverse.*[CG1_aft, CG2_aft, CG_Combined_aft, CG_CombinedCalculated_aft],[0.2, 0.1, 0, -0.1],'kx')
+% scatter(PlotInverse.*[CG1_aft, CG2_aft, CG_Combined_aft, CG_CombinedCalculated_aft],[0.2, 0.1, 0, -0.1],'kx')
 % lgd = legend("CG_{UAS 1}","CG_{UAS 2}","CG_{Combined UAS (Combined Masses)}","CG_{Combined UAS (Aerodynamically Determined)}");
 ylim([-0.4 0.5]);
 ax = gca; ax.YAxis.Visible = 'off';
@@ -118,7 +124,7 @@ text(PlotInverse*(CG1_aft - 0.005), 0.2+textOffset, "CG_{UAS 1}", 'Color', 'b')
 text(PlotInverse*(CG2_aft - 0.005), 0.1+textOffset, "CG_{UAS 2}", 'Color', 'r')
 text(PlotInverse*(CG_Combined_aft - 0.005), 0+textOffset, "CG_{Combined UAS (Combined Masses)}", 'Color', 'k')
 text(PlotInverse*(CG_CombinedCalculated_aft - 0.005), -0.1+textOffset, "CG_{Combined UAS (Aerodynamically Determined)}", 'Color', 'm')
-
+xlabel("Longitudinal Axis [m]");
 
 %% \/ Aircraft Model \/
 
@@ -267,6 +273,7 @@ if printresults && options ~= "ghost"
     title("UAS 1 : ISR")
     lgd = legend("","","","","1/4 MAC_{W/T}","","","","NP_{UAS 1}");
     lgd.FontSize = 8;
+    xlabel("Lateral Axis [m]"); ylabel("Longitudinal Axis [m]")
 
     % UAS 2
     nexttile(top,2)
@@ -283,6 +290,7 @@ if printresults && options ~= "ghost"
     title("UAS 2 : Payload Drop")
     lgd = legend("","","","","1/4 MAC_{W/T}","","","","NP_{UAS 2}");
     lgd.FontSize = 8;
+    xlabel("Lateral Axis [m]"); ylabel("Longitudinal Axis [m]")
 
     % Combined Vehicle
     nexttile(t,2)
@@ -305,6 +313,7 @@ if printresults && options ~= "ghost"
     title("Combined UAS"); 
     lgd = legend("","","","","","","","","","","","","","","NP_{UAS Combined}");
     lgd.FontSize = 8;
+    xlabel("Lateral Axis [m]"); ylabel("Longitudinal Axis [m]")
 
     set(0, 'Units', 'pixels');
     screenSize = get(0, 'ScreenSize');
@@ -331,12 +340,12 @@ elseif printresults
     patch(-Tail1_X, Tail1_Y, 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'b');
     patch(-Wing2_X, Wing2_Y, 'r', 'FaceAlpha', 0.2, 'EdgeColor', 'r');
     patch(-Tail2_X, Tail2_Y, 'r', 'FaceAlpha', 0.2, 'EdgeColor', 'r');
-    plot([Wing1_AC(1) Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
-    plot([Wing2_AC(1) Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
-    plot([-Wing1_AC(1) -Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
-    plot([-Wing2_AC(1) -Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
-    plot([Wing1_AC(1) -Wing1_AC(1)], [Wing1_AC(2) Wing1_AC(2)],'k:')
-    plot([Wing2_AC(1) -Wing2_AC(1)], [Wing2_AC(2) Wing2_AC(2)],'k:')
+    % plot([Wing1_AC(1) Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
+    % plot([Wing2_AC(1) Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
+    % plot([-Wing1_AC(1) -Wing1_AC(1)], [Wing1_MACloc(1) Wing1_MACloc(2)],'k--')
+    % plot([-Wing2_AC(1) -Wing2_AC(1)], [Wing2_MACloc(1) Wing2_MACloc(2)],'k--')
+    % plot([Wing1_AC(1) -Wing1_AC(1)], [Wing1_AC(2) Wing1_AC(2)],'k:')
+    % plot([Wing2_AC(1) -Wing2_AC(1)], [Wing2_AC(2) Wing2_AC(2)],'k:')
     scatter(0,hn,'kdiamond',"filled");
     grid on; axis equal; xlim([-0.8 0.8]); ylim([-1.1 0.2]);
     title("Combined UAS"); 
