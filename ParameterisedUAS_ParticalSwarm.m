@@ -10,23 +10,23 @@ Swing2Convergence = 0.15;
 
 % Initial Conditions
 % Upper UAS
-Cr1 = [0.100 0.400];    % [m]
-Cr2 = [0.100 0.400];    % [m]
-Ct = [0.060 0.200];     % [m]
-b = [1.000 1.400];      % [m]
-Sweep1 = [20 40];       % [deg]
+Cr1 = [0.240 0.260];    % [m]
+Cr2 = [0.170 0.190];    % [m]
+Ct = [0.100 0.130];     % [m]
+b = [1.000 1.100];      % [m]
+Sweep1 = [20 30];       % [deg]
 Sweep2 = [-30 -20];     % [deg] 
-x1 = [0.300 0.650];     % [m]
-x2 = [-0.300 -0.400];   % [m]
+x1 = [0.400 0.600];     % [m]
+x2 = [-0.300 -0.350];   % [m]
 % Lower UAS
-Cr1_t = [0.080 0.250];  % [m]
-b1_t = [0.300 0.600];   % [m]
-Cr2_t = [0.020 0.200];  % [m]
-b2_t = [0.400 0.600];   % [m]
-Ct1_t = [0.040 0.060];  % [m]
-Sweep1_t = [0 30];      % [deg]
-Ct2_t = [0.020 0.040];  % [m]
-Sweep2_t = [0 30];      % [deg]
+Cr1_t = [0.100 0.200];  % [m]
+b1_t = [0.400 0.500];   % [m]
+Cr2_t = [0.090 0.110];  % [m]
+b2_t = [0.450 0.550];   % [m]
+Ct1_t = [0.050 0.060];  % [m]
+Sweep1_t = [12 20];      % [deg]
+Ct2_t = [0.025 0.045];  % [m]
+Sweep2_t = [10 18];      % [deg]
 
 tipSeperation = [0 0.050]; % [m]
 
@@ -47,9 +47,9 @@ a0 = rand(1,size(parameter_Ranges,2));
 A = []; b = []; Aeq = []; beq = [];
 i = 1;
 
-options = optimoptions("particleswarm",SwarmSize=100,HybridFcn=@fmincon);
+options = optimoptions("particleswarm",SwarmSize=150,HybridFcn=@fmincon);
 
-a = particleswarm(@AircraftModel,length(parameter_Ranges),lb,ub,options)
+[a,fval,exitflag,output,points] = particleswarm(@AircraftModel,length(parameter_Ranges),lb,ub,options)
 a_Output = a .* (parameter_Ranges(2,:) - parameter_Ranges(1,:)) + parameter_Ranges(1,:);
 
 
@@ -68,8 +68,9 @@ a_Output = a .* (parameter_Ranges(2,:) - parameter_Ranges(1,:)) + parameter_Rang
 % title("Parameterization Convergence")
 
 % % Plot Final Aircraft % %
-% a = [0.248452354142801	0.182663828512092	0.117459967277873	1	26.2489271471051	-24.6774759056559	0.519877481007816	-0.300000000000000	0.144788011777543	0.465664773550571	0.105433108732498	0.484744602166759	0.0581619329085618	16.5827041691186	0.0294809762192670	14.9644789083684	0.830000000000000];
-[NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a_Output,UAS1_Stability,UAS2_Stability,Combined_Stability,true);
+aBuilt = [0.248452354142801	0.182663828512092	0.117459967277873	1	26.2489271471051	-24.6774759056559	0.519877481007816	-0.300000000000000	0.144788011777543	0.465664773550571	0.105433108732498	0.484744602166759	0.0581619329085618	16.5827041691186	0.0294809762192670	14.9644789083684	0 0.830000000000000];
+[NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a_Output,UAS1_Stability,UAS2_Stability,Combined_Stability,true,"");
+CombinedUASInputs(aBuilt,UAS1_Stability,UAS2_Stability,Combined_Stability,true,"ghost");
 
 NP2 = real(NP2); hn = real(hn);
 
@@ -135,7 +136,7 @@ tic
     Combined_Stability = [0.20 0.30];
     UAS1_mass = 3; % [kg]
     UAS2_mass = UAS1_mass*massRatio; % [kg]
-    [NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a_Real,UAS1_Stability,UAS2_Stability,Combined_Stability,false);
+    [NP1, NP2, hn, MAC1, MAC2, Wing1_S, Wing2_S] = CombinedUASInputs(a_Real,UAS1_Stability,UAS2_Stability,Combined_Stability,false,"");
     
     NP2 = real(NP2); hn = real(hn);
 
@@ -187,7 +188,7 @@ end
 
 %% Functions
 
-function [NP1, NP2, hn, CMAC1, CMAC2,Wing1_S,Wing2_S] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,printresults)
+function [NP1, NP2, hn, CMAC1, CMAC2,Wing1_S,Wing2_S] = CombinedUASInputs(a,UAS1_Stability,UAS2_Stability,Combined_Stability,printresults, options)
 M = 13.90 / 343; % m/s to Mach
 Cr1 = a(1);Cr2 = a(2);Ct = a(3);b = a(4);Sweep1 = a(5);Sweep2 = a(6);x1 = a(7);x2 = a(8);Cr1_t = a(9); b1_t = a(10);Cr2_t = a(11);b2_t = a(12);Ct1_t = a(13);Sweep1_t = a(14);Ct2_t = a(15);Sweep2_t = a(16); tipSeperation = a(17);
 % % DEFINE AIRCRAFT % %
@@ -247,7 +248,7 @@ h01 = Wing1_AC(2); h02 = Wing2_AC(2); l2 = -abs(Wing1_Y(1) - Wing2_Y(1)); de_da 
 hn = h01 + (l2 + h02*CMAC2 - h01*CMAC1)*(1-de_da)*(aw2/aw1) / (1 + (1-de_da)*(aw2/aw1));
 
 
-if(printresults)
+if printresults && options ~= "ghost"
     figure()
     t = tiledlayout(2,1, 'TileSpacing','compact', 'Padding','compact');
     top = tiledlayout(t, 1, 2, 'TileSpacing','compact', 'Padding','compact');
@@ -309,8 +310,18 @@ if(printresults)
     screenSize = get(0, 'ScreenSize');
     figWidth = 800; figHeight = 700;
     set(gcf, 'Units', 'pixels', 'Position', [(screenSize(3) - figWidth) / 2, (screenSize(4) - figHeight) / 2, figWidth, figHeight]);
+end
 
-
+if printresults && options == "ghost"
+    patch(Wing1_X, Wing1_Y, 'b', 'FaceAlpha', 0.05, 'EdgeColor', 'k', 'LineStyle','--'); hold on;
+    patch(Tail1_X, Tail1_Y, 'b', 'FaceAlpha', 0.05, 'EdgeColor', 'k', 'LineStyle','--');
+    patch(Wing2_X, Wing2_Y, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'k', 'LineStyle','--');
+    patch(Tail2_X, Tail2_Y, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'k', 'LineStyle','--');
+    patch(-Wing1_X, Wing1_Y, 'b', 'FaceAlpha', 0.05, 'EdgeColor', 'k', 'LineStyle','--');
+    patch(-Tail1_X, Tail1_Y, 'b', 'FaceAlpha', 0.05, 'EdgeColor', 'k', 'LineStyle','--');
+    patch(-Wing2_X, Wing2_Y, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'k', 'LineStyle','--');
+    patch(-Tail2_X, Tail2_Y, 'r', 'FaceAlpha', 0.05, 'EdgeColor', 'k', 'LineStyle','--');
+elseif printresults
     figure()
     patch(Wing1_X, Wing1_Y, 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'b'); hold on;
     patch(Tail1_X, Tail1_Y, 'b', 'FaceAlpha', 0.2, 'EdgeColor', 'b');
