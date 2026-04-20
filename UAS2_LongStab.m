@@ -1,15 +1,15 @@
 %% UAS 2 Forward Swept + Canard
-function [figure, aw2, cmc, Cmf2, cm0wing2] = UAS2_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
+function [fig, aw2, cmc, Cmf2, cm0wing2, cl_tot2, cd_tot2] = UAS2_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
     hnw, hnwb, tailsweephalf, tailspan, tailarea,lt)
 
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
-alpha = linspace(-20, 20, 100000).* pi/180 ; %- alpha;
+alpha = linspace(-10, 10, 100000).* pi/180 ; %- alpha;
 alpha1 = alpha -6.82 * pi/180;
 % Airfoil Wing Relations
 Lambdawing2 = sweep;
-LambdaQwing2 = quarterSweep*pi/180;
+LambdaQwing2 = quarterSweep;
 a0wing2 = 6;% 2.006*pi    ; % radians (6)
 cd0wing2 = 0.01331; % (0.00533)
 cm0wing2 = -0.1568; % (-0.0787)
@@ -56,8 +56,8 @@ a0canard = 2*pi;
 cl0canard = 0; 
 cd0canard = 0.007;
 cm0canard = 0;
-Scanard = tailspan;
-bcanard = tailarea;
+bcanard = tailspan;
+Scanard = tailarea;
 ARcanard = bcanard^2/Scanard;
 df = fuselagew   ; % fuselage diamater/width
 sc = 1 - 2*(df/bcanard)^2     ; % s factor accounts for induced drag caused by span loading
@@ -101,9 +101,30 @@ cm0wf2 = cm0wing2 * ARwing2*cos(Lambdawing2)^2/(ARwing2 + 2*cos(Lambdawing2)^2);
 
 Cm2 = cm0wf2 - cmw2 + cmc ;%+ Cmf2;
 
+% lift and drag totals
+cl_tot2 = clw2 + clc;
+cd_tot2 = cdw2 + cdc;
+
 
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
-figure = plot(alpha.*180/pi,Cm2); title("C_m vs \alpha", "UAS 2"); 
-xlabel("angle of attack (^o)"); ylabel("Total Moment Coefficient");
-grid on; hold off;
+% figure = plot(alpha.*180/pi,Cm2); title("C_m vs \alpha", "UAS 2"); 
+% xlabel("angle of attack (^o)"); ylabel("Total Moment Coefficient");
+% grid on; hold off;
+
+fig = figure()
+
+cmytot3 = [0.13 0.09 0.05 0.01 -0.02 -0.05 -0.09 -0.12 -0.15 -0.18 -0.2 -0.225 -0.25 -0.275 -0.3 -0.31 -0.33 -0.35 -0.36 -0.38];
+alpha2 = linspace(-10, 10, 20);
+plot(alpha2, cmytot3)
+hold on; grid on; set(gcf,'Color','w');
+plot(alpha.*180/pi,Cm2); 
+xlabel('Angle of Attack (deg)')
+ylabel('Total Pitching Moment Coefficient')
+title('Payload Aircraft Longitudinal Stability')
+% ylim([-1 1]); 
+xlim([-10 10])
+legend('OpenVSP Data', 'Calculated Data')
+
+hold off;
+
 end

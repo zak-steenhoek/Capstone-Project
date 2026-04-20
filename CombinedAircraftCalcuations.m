@@ -176,16 +176,154 @@ NPC = -0.336303;
 
 %% longituinal stability %%
 % NOTE: xcg/MAC is needed to ensure correct data. h < hn for stability
-figure()
-[figure1,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(Lambdaw1, Wing1_halfSweep, ...
+[figure1,aw,cmt, Cmf, cm0wing, cl_tot1, cd_tot1, alpha1] = UAS1_LongStab(Lambdaw1, Wing1_halfSweep, ...
     wspan1, Wing1_S, df,...
    CMAC1,-Wing1_AC(1,2), -NP1, Tail1_quarterSweep, tspan1, Tail1_S,lt1);
 
-figure()
-[figure2, aw2, cmc, Cmf2, cm0wing2] = UAS2_LongStab(Lambdaw2, Wing2_halfSweep, ...
+[figure2, aw2, cmc, Cmf2, cm0wing2, cl_tot2, cd_tot2] = UAS2_LongStab(Lambdaw2, Wing2_halfSweep, ...
     wspan2, Wing2_S, df2,...
     CMAC2,-Wing2_AC(1,2), -NP2, Tail2_halfSweep, tspan2, Tail2_S,lt2);
 
-figure()
 [figure3] = Joined_LongStab(Wing1_S, Wing2_S,wspan1,wspan2, CMAC1, CMAC2,...
     -Wing1_AC(1,2), -Wing2_AC(1,2), aw, aw2, cmt, cmc, cm0wing, cm0wing2, Lambdaw2);
+
+% Lift and drag plots
+alpha1 = alpha1.*180/pi;
+alpha2 = linspace(-10, 10, 20);
+
+% -----------------------------
+% Data (keep your existing vars)
+% -----------------------------
+cl1_vsp = [-0.4, -0.31, -0.23, -0.15, -0.05, 0.04, 0.13, 0.21, 0.31, 0.4, 0.49, 0.57, 0.65, 0.75, 0.82, 0.9, 1, 1.09, 1.16, 1.25];
+cd1_vsp = [0.025, 0.020, 0.016, 0.014, 0.012, 0.0105, 0.012, 0.014, 0.013, 0.016, 0.0185, 0.024, 0.0295, 0.035, 0.042, 0.05, 0.059, 0.069, 0.079, 0.09];  
+
+cl2_vsp = [-0.55, -0.45, -0.35, -0.27, -0.2, -0.1, -0.02, 0.06, 0.15, 0.25, 0.33, 0.40, 0.5, 0.58, 0.65, 0.75, 0.82, 0.9, 1, 1.08];
+cd2_vsp = [-0.005, -0.004, -0.003, -0.001, 0, 0.002, 0.004, 0.006, 0.009, 0.012, 0.015, 0.018, 0.02, 0.023, 0.026, 0.03, 0.034, 0.038, 0.042, 0.045];
+
+cl3_vsp = [-0.85, -0.7, -0.55, -0.4, -0.25, -0.1, 0.05, 0.22, 0.38, 0.53, 0.68, 0.81, 0.99, 1.1, 1.25, 1.4, 1.55, 1.7, 1.85, 2];
+cd3_vsp = [0.022, 0.02, 0.018, 0.016, 0.015, 0.015, 0.017, 0.019, 0.021, 0.03, 0.04, 0.045, 0.05, 0.06, 0.08, 0.09, 0.105, 0.12, 0.14, .16];
+
+cl_tot3 = cl_tot1 + cl_tot2;
+cd_tot3 = cd_tot1 + cd_tot2;
+
+
+% -----------------------------
+% Layout parameters
+% -----------------------------
+w = 0.35; h = 0.35;
+pos1 = [0.08 0.55 w h];
+pos2 = [0.57 0.55 w h];
+pos3 = [0.32 0.08 w h];
+
+%% =============================
+% VEHICLE 1
+% =============================
+figure('Color','w');
+
+ax1 = axes('Position', pos1);
+plot(ax1, alpha2, cl1_vsp);
+hold(ax1,'on'); grid(ax1,'on');
+plot(ax1, alpha1, cl_tot1);
+xlim(ax1, [-10 10]);
+xlabel(ax1,'Angle of Attack (deg)');
+ylabel(ax1,'C_L');
+title(ax1,'Vehicle 1: C_L vs \alpha');
+legend(ax1, {'OpenVSP','Calculations'}, 'Location','best');
+
+ax2 = axes('Position', pos2);
+hold(ax2,'on'); grid(ax2,'on');
+if ~isempty(cd1_vsp)
+    plot(ax2, alpha2, cd1_vsp);
+end
+plot(ax2, alpha1, cd_tot1);
+xlabel(ax2,'Angle of Attack (deg)');
+ylabel(ax2,'C_D');
+title(ax2,'Vehicle 1: C_D vs \alpha');
+legend(ax2, {'OpenVSP','Calculations'}, 'Location','best');
+
+ax3 = axes('Position', pos3);
+hold(ax3,'on'); grid(ax3,'on');
+if ~isempty(cd1_vsp) && ~isempty(cl1_vsp)
+    plot(ax3, cd1_vsp, cl1_vsp);
+end
+plot(ax3, cd_tot1, cl_tot1);
+xlabel(ax3,'C_D');
+ylabel(ax3,'C_L');
+title(ax3,'Vehicle 1: C_L vs C_D');
+legend(ax3, {'OpenVSP','Calculations'}, 'Location','best');
+
+
+%% =============================
+% VEHICLE 2
+% =============================
+figure('Color','w');
+
+ax1 = axes('Position', pos1);
+plot(ax1, alpha2, cl2_vsp);
+hold(ax1,'on'); grid(ax1,'on');
+plot(ax1, alpha1, cl_tot2);
+xlim(ax1, [-10 10]);
+xlabel(ax1,'Angle of Attack (deg)');
+ylabel(ax1,'C_L');
+title(ax1,'Vehicle 2: C_L vs \alpha');
+legend(ax1, {'OpenVSP','Calculations'}, 'Location','best');
+
+ax2 = axes('Position', pos2);
+hold(ax2,'on'); grid(ax2,'on');
+if ~isempty(cd2_vsp)
+    plot(ax2, alpha2, cd2_vsp);
+end
+plot(ax2, alpha1, cd_tot2);
+xlabel(ax2,'Angle of Attack (deg)');
+ylabel(ax2,'C_D');
+title(ax2,'Vehicle 2: C_D vs \alpha');
+legend(ax2, {'OpenVSP','Calculations'}, 'Location','best');
+
+ax3 = axes('Position', pos3);
+hold(ax3,'on'); grid(ax3,'on');
+if ~isempty(cd2_vsp) && ~isempty(cl2_vsp)
+    plot(ax3, cd2_vsp, cl2_vsp);
+end
+plot(ax3, cd_tot2, cl_tot2);
+xlabel(ax3,'C_D');
+ylabel(ax3,'C_L');
+title(ax3,'Vehicle 2: C_L vs C_D');
+legend(ax3, {'OpenVSP','Calculations'}, 'Location','best');
+
+
+%% =============================
+% VEHICLE 3
+% =============================
+figure('Color','w');
+
+ax1 = axes('Position', pos1);
+plot(ax1, alpha2, cl3_vsp);
+hold(ax1,'on'); grid(ax1,'on');
+plot(ax1, alpha1, cl_tot3);
+xlim(ax1, [-10 10]);
+xlabel(ax1,'Angle of Attack (deg)');
+ylabel(ax1,'C_L');
+title(ax1,'Vehicle 3: C_L vs \alpha');
+legend(ax1, {'OpenVSP','Calculations'}, 'Location','best');
+
+ax2 = axes('Position', pos2);
+hold(ax2,'on'); grid(ax2,'on');
+if ~isempty(cd3_vsp)
+    plot(ax2, alpha2, cd3_vsp);
+end
+plot(ax2, alpha1, cd_tot3);
+xlabel(ax2,'Angle of Attack (deg)');
+ylabel(ax2,'C_D');
+title(ax2,'Vehicle 3: C_D vs \alpha');
+legend(ax2, {'OpenVSP','Calculations'}, 'Location','best');
+
+ax3 = axes('Position', pos3);
+hold(ax3,'on'); grid(ax3,'on');
+if ~isempty(cd3_vsp) && ~isempty(cl3_vsp)
+    plot(ax3, cd3_vsp, cl3_vsp);
+end
+plot(ax3, cd_tot3, cl_tot3);
+xlabel(ax3,'C_D');
+ylabel(ax3,'C_L');
+title(ax3,'Vehicle 3: C_L vs C_D');
+legend(ax3, {'OpenVSP','Calculations'}, 'Location','best');

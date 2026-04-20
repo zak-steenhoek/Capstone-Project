@@ -1,4 +1,4 @@
-function [figure,aw,cmt, Cmf, cm0wing] = UAS1_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
+function [fig,aw,cmt, Cmf, cm0wing, cl_tot, cd_tot, alpha] = UAS1_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
     hnw, hnwb, tailsweephalf, tailspan, tailarea,lt)
 % UAS 1     Aft-Swept + Tail
 % Airfoil Wing Relations
@@ -26,7 +26,7 @@ Cw = MAC ; % MAC of wing
 hw =   0.20 ; % xcg/MAC
 hnw = hnw/MAC   ; % xac of wing/MAC
 zw =  0.01   ; % Z Distance from wing's neutral point and a/c cg 
-alpha = linspace(-20, 20, 100000).* pi/180;
+alpha = linspace(-10, 10, 100000).* pi/180;
 alpha1 = alpha - 6.82 * pi/180;
 
 
@@ -92,7 +92,7 @@ clt = at * alpha1.*(1 - epsilon) - at*(epsilon0 + it);
 
 % Theoretical Drag coefficient using C_d min from a given airfoil
 
-cdt = cd0tail + clt.^2.*(pi * ARtail * et);
+cdt = cd0tail + clt.^2./(pi * ARtail * et);
 
 % Horizontal Tail Volume Ratio
 
@@ -122,7 +122,26 @@ cm0wf = cm0wing * ARwing*cos(Lambdawing)^2/(ARwing + 2*cos(Lambdawing)^2);
 Cm1 = cm0wf + cmw + cmt; %+ Cmf; % Full moment coefficient to find longitudinal stability
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
 % 
-figure = plot(alpha.*180/pi,Cm1); title("C_m vs \alpha", "UAS 1"); 
-xlabel("angle of attack (^o)"); ylabel("Total Moment Coefficient");
-grid on; hold off
+% ISR
+fig = figure()
+
+cmytot2 = [0.21 0.18 0.14 0.1 0.05 0.02 -0.03 -0.06 -0.11 -0.15 -0.2 -0.25 -0.31 -0.35 -0.39 -0.44 -0.48 -0.52 -0.57 -0.61];
+alpha2 = linspace(-10, 10, 20);
+plot(alpha2, cmytot2)
+hold on; grid on; set(gcf,'Color','w');
+plot(alpha.*180/pi,Cm1); 
+xlabel('Angle of Attack (deg)')
+ylabel('Total Pitching Moment Coefficient')
+title('ISR Aircraft Longitudinal Stability')
+% ylim([-1 1]); 
+xlim([-10 10])
+legend('OpenVSP Data', 'Calculated Data')
+
+hold off;
+
+
+% total lift and drag
+cl_tot = clt + clw;
+cd_tot = cdt + cdw;
+
 end

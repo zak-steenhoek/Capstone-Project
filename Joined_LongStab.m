@@ -1,10 +1,10 @@
-function [figure] = Joined_LongStab(wingarea1, wingarea2, wingspan1,wingspan2, MAC1, MAC2,...
+function [fig] = Joined_LongStab(wingarea1, wingarea2, wingspan1,wingspan2, MAC1, MAC2,...
     np1, np2, aw, aw2, cmt, cmc, cm0wing, cm0wing2, lambdaw2)
 %% UAS 1 + UAS 2
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
 M = V/a;
-alpha = linspace(-20, 20, 100000).* pi/180;
+alpha = linspace(-10, 10, 100000).* pi/180;
 rho = 1.225; % Density at sea level (kg/m^3)
 Swing = wingarea1;
 Swing2 = wingarea2;
@@ -75,8 +75,24 @@ Cm12 = -l1*Swing/(C_n*S_n)*aw*alpha1 - eta*l2*Swing2*aw2/(C_n*S_n)*alpha2 +...
 Cm12 = real(Cm12);
 
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
-figure = plot(alpha.*180/pi,Cm12); title("C_m vs \alpha", "Joined UAS"); 
-xlabel("angle of attack (^o)"); ylabel("Total Moment Coefficient");
-grid on;
+% figure = plot(alpha.*180/pi,Cm12); title("C_m vs \alpha", "Joined UAS"); 
+% xlabel("angle of attack (^o)"); ylabel("Total Moment Coefficient");
+% grid on;
+
+fig = figure()
+
+cmytot1 = [0.33 0.28 0.22 0.17 0.12 0.07 0.02 -0.04 -0.09 -0.14 -0.19 -0.24 -0.3 -0.34 -0.39 -0.44 -0.49 -0.54 -0.59 -0.62];
+alpha2 = linspace(-10, 10, 20);
+plot(alpha2, cmytot1)
+hold on; grid on; set(gcf,'Color','w');
+plot(alpha.*180/pi,Cm12); 
+xlabel('Angle of Attack (deg)')
+ylabel('Total Pitching Moment Coefficient')
+title('Composite Aircraft Longitudinal Stability')
+% ylim([-1 1]); 
+xlim([-10 10])
+legend('OpenVSP Data', 'Calculated Data')
+
+hold off;
 
 end
