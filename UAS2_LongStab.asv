@@ -1,6 +1,6 @@
 %% UAS 2 Forward Swept + Canard
-function [fig, aw2, cmc, cmt, Cmf2, cm0wing2, cl_tot2, cd_tot2] = UAS2_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
-    hnw, hnwb, tailsweephalf, tailquartersweep, tailspan, tailarea,lt)
+function [fig, aw2, cmc, Cmf2, cm0wing2, cl_tot2, cd_tot2] = UAS2_LongStab(sweep, quarterSweep, wingspan, wingarea, fuselagew,MAC,...
+    hnw, hnwb, tailsweephalf, tailspan, tailarea,lt)
 
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
@@ -53,7 +53,6 @@ cmw2 = +cm0wing2 + (clw2.*cos(alpha1) + cdw2.*sin(alpha1)).*(hw2+hnw2) + (clw2.*
 % Airfoil Tail Relations %
 
 Lambdahcanard = tailsweephalf;
-LambdaQcanard = tailquartersweep;
 a0canard = 2*pi;
 cl0canard = 0; 
 cd0canard = 0.007;
@@ -70,8 +69,8 @@ ec = 1/Qc   ; % Oswald Efficiency factor assuming inviscid flow
 
 % Theoretical Lift Curve of Tail Dependent on Aifoil Lift Curve Slope
 
-% ac = (2*pi*ARcanard) * (2 + sqrt( (ARcanard^2*(1-M^2)*(kc).^2).* (1 + (tan(Lambdahcanard)^2)/(1-M^2)) + 4)).^(-1);
-ac = (pi*ARcanard) * (1 + sqrt( ((1-M^2)*(2*pi*cos(LambdaQcanard)^2))* (1 - ((pi*ARcanard)/(cos(LambdaQcanard)^2))^2))).^-1;
+ac = (2*pi*ARcanard) * (2 + sqrt( (ARcanard^2*(1-M^2)*(kc).^2).* (1 + (tan(Lambdahcanard)^2)/(1-M^2)) + 4)).^(-1);
+ac = (pi*ARwing2) * (1 + sqrt( ((1-M^2)*(a0wing2*cos(LambdaQwing2)^2))* (1 - ((pi*ARwing2)/(cos(LambdaQwing2)^2))^2))).^-1;
 
 clc = ac* alpha;
 

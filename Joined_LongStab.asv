@@ -1,5 +1,5 @@
-function [figure] = Joined_LongStab(wingarea1, wingarea2, wingspan1,wingspan2, MAC1, MAC2,...
-    np1, np2, aw, aw2, cmt, cmc, cm0wing, cm0wing2, lambdaw2)
+function [fig] = Joined_LongStab(wingarea1, wingarea2, wingspan1,wingspan2, MAC1, MAC2,...
+    np1, np2, aw, aw2, cmt, cmc, cmt2, cm0wing, cm0wing2, lambdaw2)
 %% UAS 1 + UAS 2
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
@@ -13,8 +13,8 @@ S_n = wingspan1 + wingspan2; % Total Wing Span
 C_n = MAC1 + MAC2; % Total MAC
 Cw = MAC1; Cw2 = MAC2;
 
-l1 = (np1/MAC1-0.20); % Distance from AC of Front Wing to cg
-l2 = ((np2+0.2)/MAC2-0.20); % Distance from AC of aft wing to cg
+l1 = (np1- MAC2*0.20); % Distance from AC of Front Wing to cg
+l2 = (np2-MAC2*0.20); % Distance from AC of aft wing to cg
 q = 0.5*rho*V^2;
 alpha0 = -6.82 * pi/180;
 %n = ; % Load Factor of joined craft
@@ -70,13 +70,29 @@ eta = 0.9;
 %%%%%%%%% aerodynamic efficiency.
 
 Cm12 = -l1*Swing/(C_n*S_n)*aw*alpha1 - eta*l2*Swing2*aw2/(C_n*S_n)*alpha2 +...
-    Swing*Cw*cm0wing/(S_n*C_n) + eta*Swing2*Cw2/(S_n*C_n)*cm0wing2 ;%+...
-    %+cmt+cmc;
-
+    Swing*Cw*cm0wing/(S_n*C_n) + eta*Swing2*Cw2/(S_n*C_n)*cm0wing2...
+    + cmc + cmt + cmt2;
+Cm12 = real(Cm12);
 
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
-figure = plot(alpha.*180/pi,Cm12); title("C_m vs \alpha", "Joined UAS"); 
-xlabel("angle of attack (^o)"); ylabel("Total Moment Coefficient");
-grid on;
+% figure = plot(alpha.*180/pi,Cm12); title("C_m vs \alpha", "Joined UAS"); 
+% xlabel("angle of attack (^o)"); ylabel("Total Moment Coefficient");
+% grid on;
+
+fig = figure()
+
+cmytot1 = [0.33 0.28 0.22 0.17 0.12 0.07 0.02 -0.04 -0.09 -0.14 -0.19 -0.24 -0.3 -0.34 -0.39 -0.44 -0.49 -0.54 -0.59 -0.62];
+alpha2 = linspace(-10, 10, 20);
+plot(alpha2, cmytot1)
+hold on; grid on; set(gcf,'Color','w');
+plot(alpha.*180/pi,Cm12); 
+xlabel('Angle of Attack (deg)')
+ylabel('Total Pitching Moment Coefficient')
+title('Composite Aircraft Longitudinal Stability')
+% ylim([-1 1]); 
+xlim([-10 10])
+legend('OpenVSP Data', 'Calculated Data')
+
+hold off;
 
 end

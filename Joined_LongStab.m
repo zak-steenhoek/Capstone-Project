@@ -1,5 +1,5 @@
 function [fig] = Joined_LongStab(wingarea1, wingarea2, wingspan1,wingspan2, MAC1, MAC2,...
-    np1, np2, aw, aw2, cmt, cmc, cm0wing, cm0wing2, lambdaw2)
+    np1, np2, aw, aw2, cmt, cmc, cmt2, cm0wing, cm0wing2, lambdaw2)
 %% UAS 1 + UAS 2
 V = 13.889    ; % m/s max speed wanted
 a = 343 ; % m/s at ~ 120m (max ceiling)
@@ -70,8 +70,8 @@ eta = 0.9;
 %%%%%%%%% aerodynamic efficiency.
 
 Cm12 = -l1*Swing/(C_n*S_n)*aw*alpha1 - eta*l2*Swing2*aw2/(C_n*S_n)*alpha2 +...
-    Swing*Cw*cm0wing/(S_n*C_n) + eta*Swing2*Cw2/(S_n*C_n)*cm0wing2 ;%+...
-    %+cmt+cmc;
+    Swing*Cw*cm0wing/(S_n*C_n) + eta*Swing2*Cw2/(S_n*C_n)*cm0wing2...
+    + cmc + cmt;
 Cm12 = real(Cm12);
 
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative

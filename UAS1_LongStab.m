@@ -34,7 +34,7 @@ alpha1 = alpha - 6.82 * pi/180;
 
 kw = 2*pi*(a0wing).^-1;
 
-aw = (pi*ARwing) * (1 + sqrt(1+ ((1-M^2)*(cos(LambdaQwing)))*(((pi*ARwing)/(a0wing*cos(LambdaQwing)))^2))).^-1;
+aw = (pi*ARwing) * (1 + sqrt(1+ ((1-M^2)*(cos(LambdaQwing)))*(1-((pi*ARwing)/(a0wing*cos(LambdaQwing)))^2))).^-1;
 %aw = (2*pi*ARwing) * (2 + sqrt( (ARwing^2*(1-M^2)*(kw)^2)* (1 + (tan(LambdaQwing)^2)/(1-M^2)) + 4)).^-1;
 % ^should be lambda at half chord line on wing
 
@@ -43,7 +43,7 @@ clw = cl0 + aw * alpha1;
 
 % Theoretical Drag coefficient using C_d min from a given airfoil
 
-cdw = cd0wing + clw.^2.*(pi * ARwing * ew)^(-1); % full lambda used
+cdw = -(cd0wing + real(clw.^2./(pi * ARwing * ew))); % full lambda used
 
 
 % Theoretical Moment Coefficient of wing from cd and cl values
@@ -123,7 +123,7 @@ Cm1 = cm0wf + cmw + cmt + Cmf; % Full moment coefficient to find longitudinal st
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
 % 
 % ISR
-fig = plot(alpha*180/pi,Cm1);
+fig = plot(alpha*180/pi,cdw);
 fig = figure()
 
 cmytot2 = [0.21 0.18 0.14 0.1 0.05 0.02 -0.03 -0.06 -0.11 -0.15 -0.2 -0.25 -0.31 -0.35 -0.39 -0.44 -0.48 -0.52 -0.57 -0.61];
