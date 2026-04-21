@@ -176,14 +176,16 @@ NPC = -0.336303;
 
 %% longituinal stability %%
 % NOTE: xcg/MAC is needed to ensure correct data. h < hn for stability
+
+figure
 [figure1,aw,cmt, Cmf, cm0wing, cl_tot1, cd_tot1, alpha1] = UAS1_LongStab(Lambdaw1, Wing1_halfSweep, ...
     wspan1, Wing1_S, df,...
    CMAC1,-Wing1_AC(1,2), -NP1, Tail1_quarterSweep, tspan1, Tail1_S,lt1);
-
+figure
 [figure2, aw2, cmc, Cmf2, cm0wing2, cl_tot2, cd_tot2] = UAS2_LongStab(Lambdaw2, Wing2_halfSweep, ...
     wspan2, Wing2_S, df2,...
     CMAC2,-Wing2_AC(1,2), -NP2, Tail2_halfSweep, tspan2, Tail2_S,lt2);
-
+figure
 [figure3] = Joined_LongStab(Wing1_S, Wing2_S,wspan1,wspan2, CMAC1, CMAC2,...
     -Wing1_AC(1,2), -Wing2_AC(1,2), aw, aw2, cmt, cmc, cm0wing, cm0wing2, Lambdaw2);
 

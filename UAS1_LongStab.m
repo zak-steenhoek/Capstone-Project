@@ -30,7 +30,7 @@ alpha = linspace(-10, 10, 100000).* pi/180;
 alpha1 = alpha - 6.82 * pi/180;
 
 
-% Theoretical Lift Curve of Wing Dependent on Aifoil Lift Curve Slope
+% Theoretical Lift Curve of Wing Dependent on Air2foil Lift Curve Slope
 
 kw = 2*pi*(a0wing).^-1;
 
@@ -38,7 +38,7 @@ aw = (pi*ARwing) * (1 + sqrt(1+ ((1-M^2)*(cos(LambdaQwing)))*(((pi*ARwing)/(a0wi
 %aw = (2*pi*ARwing) * (2 + sqrt( (ARwing^2*(1-M^2)*(kw)^2)* (1 + (tan(LambdaQwing)^2)/(1-M^2)) + 4)).^-1;
 % ^should be lambda at half chord line on wing
 
-clw = aw * alpha1;
+clw = cl0 + aw * alpha1;
 
 
 % Theoretical Drag coefficient using C_d min from a given airfoil
@@ -60,10 +60,10 @@ cmw = cm0wing + (clw.*cos(alpha1) + cdw.*sin(alpha1)).*(hw-hnw) + (clw.*sin(alph
 
 LambdaQtail = tailsweephalf;
 a0tail = 2*pi; % lift-curve slope of airfoil
-%cd0tail = 0.007; %0.007
-%cm0tail = 0; %0
-cd0tail = 0.01331;
-cm0tail = -0.1568;
+cd0tail = 0.007; %0.007
+cm0tail = 0; %0
+%cd0tail = 0.01331;
+%cm0tail = -0.1568;
 Stail = tailarea;
 btail = tailspan;
 ARtail = btail^2/Stail;
@@ -75,7 +75,7 @@ Qt = 1/(u*st);
 et = 1/Qt   ; % Oswald Efficiency factor assuming inviscid flow
 
 % Downwash angle of tail
-epsilon = 2 *alpha1.* aw* (pi*ARwing)^(-1); % d(epsilon)/d(alpha)
+epsilon = 2 *alpha.* aw* (pi*ARwing)^(-1); % d(epsilon)/d(alpha)
 epsilon0 = 2*pi*aw*(- 6.82 * pi/180)*(pi*ARwing).^(-1); % downwash angle at zero angle of attack
 it = 0 * pi/180; % Angle of incidence -- NOTE: 
 
@@ -86,7 +86,7 @@ at = (pi*ARtail) * (1 + sqrt(1+ ...
     ((1-M^2)*(cos(LambdaQtail)))*(((pi*ARtail)/...
     (a0tail*cos(LambdaQtail)))^2))).^-1;
 
-clt = at * alpha1.*(1 - epsilon) - at*(epsilon0 + it);
+clt = at * alpha.*(1 - epsilon) - at*(epsilon0 + it);
 
 
 
@@ -119,10 +119,11 @@ Cmf = 2*EV/(Swing*Cw)*alpha;
 cm0wf = cm0wing * ARwing*cos(Lambdawing)^2/(ARwing + 2*cos(Lambdawing)^2); 
 % cm0wing is wing airfoil pitching moment, and full lambda used here
 
-Cm1 = cm0wf + cmw + cmt; %+ Cmf; % Full moment coefficient to find longitudinal stability
+Cm1 = cm0wf + cmw + cmt + Cmf; % Full moment coefficient to find longitudinal stability
 % plot showing C_m vs alpha; for stability, Cm_alpha is negative
 % 
 % ISR
+fig = plot(alpha*180/pi,Cm1);
 fig = figure()
 
 cmytot2 = [0.21 0.18 0.14 0.1 0.05 0.02 -0.03 -0.06 -0.11 -0.15 -0.2 -0.25 -0.31 -0.35 -0.39 -0.44 -0.48 -0.52 -0.57 -0.61];
