@@ -125,14 +125,15 @@ Cm1 = cm0wf + cmw + cmt + Cmf; % Full moment coefficient to find longitudinal st
 % ISR
 fig = plot(alpha*180/pi,cdw);
 fig = figure()
-
+fontsize(gcf, scale = 10)
+set(0,'DefaultAxesFontName','Times New Roman')
 cmytot2 = [0.21 0.18 0.14 0.1 0.05 0.02 -0.03 -0.06 -0.11 -0.15 -0.2 -0.25 -0.31 -0.35 -0.39 -0.44 -0.48 -0.52 -0.57 -0.61];
 alpha2 = linspace(-10, 10, 20);
 plot(alpha2, cmytot2)
 hold on; grid on; set(gcf,'Color','w');
 plot(alpha.*180/pi,Cm1); 
-xlabel('Angle of Attack (deg)')
-ylabel('Total Pitching Moment Coefficient')
+xlabel('\alpha (deg)')
+ylabel('c_m')
 title('ISR Aircraft Longitudinal Stability')
 % ylim([-1 1]); 
 xlim([-10 10])

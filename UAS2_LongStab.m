@@ -163,7 +163,8 @@ cd_tot2 = cdw2 + cdc +cdt;
 % grid on; hold off;
 
 fig = figure()
-
+fontsize(gcf, scale = 10)
+set(0,'DefaultAxesFontName','Times New Roman')
 cmytot3 = [0.13 0.09 0.05 0.01 -0.02 -0.05 -0.09 -0.12 -0.15 -0.18 -0.2 -0.225 -0.25 -0.275 -0.3 -0.31 -0.33 -0.35 -0.36 -0.38];
 alpha2 = linspace(-10, 10, 20);
 plot(alpha2, cmytot3)

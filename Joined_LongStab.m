@@ -80,7 +80,8 @@ Cm12 = real(Cm12);
 % grid on;
 
 fig = figure()
-
+fontsize(gcf, scale = 10)
+set(0,'DefaultAxesFontName','Times New Roman')
 cmytot1 = [0.33 0.28 0.22 0.17 0.12 0.07 0.02 -0.04 -0.09 -0.14 -0.19 -0.24 -0.3 -0.34 -0.39 -0.44 -0.49 -0.54 -0.59 -0.62];
 alpha2 = linspace(-10, 10, 20);
 plot(alpha2, cmytot1)

@@ -107,7 +107,8 @@ CLa2 = 2*pi;
 de_da = 1;
 hn = h01 + (l2 + h02*c2 - h01*c1)*(1-de_da)*(CLa2/CLa1) / (1 + (1-de_da)*(CLa2/CLa1));
 
-
+fontsize(gcf, scale = 10)
+set(0,'DefaultAxesFontName','Times New Roman')
 % UAS 1
 figure()
 t = tiledlayout(2,1, 'TileSpacing','compact', 'Padding','compact');
